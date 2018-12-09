@@ -1,9 +1,16 @@
 #!/usr/bin/python3
 
-import pymysql
-import datetime
 import xlwt
 import os
+import mysql.connector
+from weibo_scrapy import settings
+
+MYSQL_HOSTS = settings.MYSQL_HOSTS
+MYSQL_USER = settings.MYSQL_USER
+MYSQL_PASSWORD = settings.MYSQL_PASSWORD
+MYSQL_PORT = settings.MYSQL_PORT
+MYSQL_DB = settings.MYSQL_DB
+
 
 
 def make_dir(folder_dir):
@@ -34,12 +41,14 @@ def write_excel(name, search_type, search_key):
     for i in range(0, len(row0)):  # 写excel头部
         worksheet.write(0, i, row0[i])
 
-    db = pymysql.connect(host='localhost', user='root', password='root',
-                         db='blog', charset='utf8mb4')
+    db = mysql.connector.connect(user=MYSQL_USER, password=MYSQL_PASSWORD,
+                                  host=MYSQL_HOSTS, database=MYSQL_DB,
+                                  charset='utf8mb4')
+
     cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
     if search_type == 1:
-        sql = "SELECT * From sina_blog WHERE user_name = %s ORDER BY `time` DESC"
-        cursor.execute(sql, name)  # 使用 execute()  方法执行 SQL 查询
+        sql = "SELECT * From sina_blog WHERE user_name = '{}' ORDER BY `time` DESC".format(name)
+        cursor.execute(sql, name)
     else:
         sql = "SELECT * From sina_blog WHERE search_type = %s AND search_key = %s ORDER BY `time` DESC"
         params = (search_type, search_key)
@@ -66,8 +75,8 @@ def write_excel(name, search_type, search_key):
 
 
 if __name__ == '__main__':
-    names = ['橙红年代_0919_15_实时']
-    search_type = 61  # 1为基于用户id  60-热门 61-实时
-    search_key = '凉生'
+    names = ['重庆发布']
+    search_type = 1  # 1为基于用户id  60-热门 61-实时
+    search_key = '天盛长歌'
     for name in names:
         write_excel(name, search_type, search_key)
