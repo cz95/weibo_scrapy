@@ -16,6 +16,7 @@ class Myspider(scrapy.Spider):
     pic_download = False
     search_type = 0
     search_key = ""
+    count = 0
 
     def start_requests(self):
         f = open('config', 'r', encoding='utf-8')
@@ -74,17 +75,17 @@ class Myspider(scrapy.Spider):
                     continue
                 mblog = weibo['mblog']
                 url = "https://m.weibo.cn/statuses/show?id=" + mblog['bid']
-                yield Request(url, callback=self.parse_detail)
+                yield Request(url, callback=self.parse_detail, dont_filter=True)
+
 
     def parse_detail(self, response):
         content = json.loads(response.text)
-        print('parse_detail : content[ok] = ' + str(content['ok']))
+        self.count = self.count + 1
         if content['ok'] == 1:
             item = WeiboScrapyItem()
             data = content['data']
             item['time'] = self.parse_time(data['created_at'])
-            print(
-                'parse_detail    time = ' + self.parse_time(data['created_at']))
+            print('parse_detail    time = ' + self.parse_time(data['created_at']))
             if self.text_download:
                 detail_text = self.detail_dir + '/' + self.format_time(
                     item['time']) + '.txt'
@@ -134,7 +135,7 @@ class Myspider(scrapy.Spider):
                 repost_data = data['retweeted_status']
                 url = "https://m.weibo.cn/statuses/show?id=" + repost_data['id']
                 yield Request(url, callback=self.parse_repost,
-                              meta={'id': repost_data['id'], "item": item})
+                              meta={'id': repost_data['id'], "item": item}, dont_filter=True)
             else:
                 yield item
 

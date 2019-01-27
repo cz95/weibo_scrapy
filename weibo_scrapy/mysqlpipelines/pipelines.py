@@ -13,14 +13,14 @@ class WeiboImagePipeline(ImagesPipeline):
             reposts_id_list = item['reposts_pic_id'].split(',')
             i = 0
             for image_id in url_id_list:
-                url = 'http://wx1.sinaimg.cn/orj360/' + image_id + '.jpg'
+                url = 'http://wx1.sinaimg.cn/large/' + image_id + '.jpg'
                 i = i + 1
                 pic_name = self.format_time(item['time']) + str(i) + '.jpg'
                 yield scrapy.Request(url, headers=DEFAULT_REQUEST_HEADERS,
                                      meta={'user_name': item['user_name'],
                                            'pic_name': pic_name})
             for image_id in reposts_id_list:
-                url = 'http://wx1.sinaimg.cn/orj360/' + image_id + '.jpg'
+                url = 'http://wx1.sinaimg.cn/large/' + image_id + '.jpg'
                 i = i + 1
                 pic_name = self.format_time(item['time']) + str(i) + '.jpg'
                 yield scrapy.Request(url, headers=DEFAULT_REQUEST_HEADERS,

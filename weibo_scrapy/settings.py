@@ -21,12 +21,12 @@ NEWSPIDER_MODULE = 'weibo_scrapy.spiders'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 16
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0.2
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -59,10 +59,8 @@ DEFAULT_REQUEST_HEADERS = {
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    # 'weibo_scrapy.middlewares.WeiboScrapyDownloaderMiddleware': 543,
-    # 'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware':543,
-    # 'weibo_scrapy.middlewares.MyproxiesSpiderMiddleware': 356,
-    'weibo_scrapy.middlewares.ProxyMiddleware': 123
+    'weibo_scrapy.middlewares.WeiboScrapyDownloaderMiddleware': 543,
+    # 'weibo_scrapy.middlewares.ProxyMiddleware': 123
 }
 
 # Enable or disable extensions
@@ -83,7 +81,12 @@ IMAGES_STORE = '../微博/image/'
 
 IMAGES_EXPIRES = 30
 
-JOBDIR = './interrupt'
+# IMAGES_THUMBS = {  # 缩略图的尺寸，设置这个值就会产生缩略图
+#     # 'small': (50, 50),
+#     # 'big': (400, 400)
+# }
+
+# JOBDIR = './interrupt'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -113,11 +116,10 @@ MYSQL_PORT = '3306'
 MYSQL_DB = 'blog'
 
 PROXY = {
-    "proxyHost ": "http-dyn.abuyun.com",
+    "proxyHost": "http-dyn.abuyun.com",
     "proxyPort": "9020",
-    "proxyUser": "阿布云内",
-    "proxyPass": "阿布云内"
-
+    "proxyUser": "H71T3JBR2Z762HSD",
+    "proxyPass": "07ACAA39EDD55595"
 }
 
 USER_AGENTS = [
