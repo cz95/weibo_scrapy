@@ -54,7 +54,6 @@ def write_excel(name, search_type, search_key):
     else:
         sql = "SELECT * From sina_blog WHERE search_type = '{}' AND search_key = '{}' ORDER BY `time` DESC".format(
             search_type, search_key)
-        print(sql)
         cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
     datas = cursor.fetchall()  # 使用 fetchone() 方法获取单条数据.
     row_num = 1

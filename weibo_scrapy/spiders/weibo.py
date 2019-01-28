@@ -9,18 +9,21 @@ import json
 
 class Myspider(scrapy.Spider):
     name = 'weibo'
-    folder_dir = ""
-    detail_dir = ""
-    repost_dir = ""
-    text_download = False
-    pic_download = False
-    search_type = 0
-    search_key = ""
-    count = 0
+
+    def __init__(self, line, *args, **kwargs):
+        self.folder_dir = ""
+        self.detail_dir = ""
+        self.repost_dir = ""
+        self.text_download = False
+        self.pic_download = False
+        self.search_type = 0
+        self.search_key = ""
+        self.line_list = line.split('@_@')
 
     def start_requests(self):
-        f = open('config', 'r', encoding='utf-8')
-        for line in f.readlines():
+        # f = open('config', 'r', encoding='utf-8')
+        # for line in f.readlines():
+        for line in self.line_list:
             if not line[0].isdigit():
                 continue
             type = int(line.split(',')[0])
@@ -77,15 +80,14 @@ class Myspider(scrapy.Spider):
                 url = "https://m.weibo.cn/statuses/show?id=" + mblog['bid']
                 yield Request(url, callback=self.parse_detail, dont_filter=True)
 
-
     def parse_detail(self, response):
         content = json.loads(response.text)
-        self.count = self.count + 1
         if content['ok'] == 1:
             item = WeiboScrapyItem()
             data = content['data']
             item['time'] = self.parse_time(data['created_at'])
-            print('parse_detail    time = ' + self.parse_time(data['created_at']))
+            print(
+                'parse_detail    time = ' + self.parse_time(data['created_at']))
             if self.text_download:
                 detail_text = self.detail_dir + '/' + self.format_time(
                     item['time']) + '.txt'
@@ -135,7 +137,8 @@ class Myspider(scrapy.Spider):
                 repost_data = data['retweeted_status']
                 url = "https://m.weibo.cn/statuses/show?id=" + repost_data['id']
                 yield Request(url, callback=self.parse_repost,
-                              meta={'id': repost_data['id'], "item": item}, dont_filter=True)
+                              meta={'id': repost_data['id'], "item": item},
+                              dont_filter=True)
             else:
                 yield item
 
