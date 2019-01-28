@@ -74,7 +74,7 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     # 'weibo_scrapy.pipelines.WeiboScrapyPipeline': 300,
     'weibo_scrapy.mysqlpipelines.pipelines.WeiboPipeline': 1,
-    'weibo_scrapy.mysqlpipelines.pipelines.WeiboImagePipeline': 2
+    'weibo_scrapy.mysqlpipelines.pipelines.WeiboImagePipeline': 30,
 }
 
 IMAGES_STORE = '../微博/image/'

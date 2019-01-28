@@ -15,7 +15,6 @@ class Myspider(scrapy.Spider):
         self.detail_dir = ""
         self.repost_dir = ""
         self.text_download = False
-        self.pic_download = False
         self.line_list = line.split('@_@')
 
     def start_requests(self):
@@ -32,7 +31,7 @@ class Myspider(scrapy.Spider):
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=107603" + \
                             line.split(',')[2]
                 max_range = line.split(',')[3]
-                self.pic_download = (line.split(',')[4].rsplit('\n')[
+                download_pic = (line.split(',')[4].rsplit('\n')[
                     0]) == "True"
             elif spider_type == 2:  # 2 基于关键词爬取
                 search_type = line.split(',')[2]
@@ -40,7 +39,7 @@ class Myspider(scrapy.Spider):
                             line.split(',')[
                                 2] + "%26q%3D" + search_key + "&page_type=searchall"
                 max_range = line.split(',')[3]
-                self.pic_download = (line.split(',')[4].rsplit('\n')[
+                download_pic = (line.split(',')[4].rsplit('\n')[
                     0]) == "True"
             if self.text_download:
                 self.folder_dir = '../微博/' + search_key
@@ -57,7 +56,8 @@ class Myspider(scrapy.Spider):
                     url = str(url_orgin) + '&page=' + str(i)
                 yield Request(url, self.parse,
                               meta={'page': str(i), 'search_type': search_type,
-                                    'search_key': search_key})
+                                    'search_key': search_key,
+                                    'download_pic': download_pic})
 
     def parse(self, response):
         data = json.loads(response.text)
@@ -80,7 +80,9 @@ class Myspider(scrapy.Spider):
                 url = "https://m.weibo.cn/statuses/show?id=" + mblog['bid']
                 yield Request(url, callback=self.parse_detail, dont_filter=True,
                               meta={'search_type': response.meta['search_type'],
-                                    'search_key': response.meta['search_key']})
+                                    'search_key': response.meta['search_key'],
+                                    'download_pic': response.meta[
+                                        'download_pic']})
 
     def parse_detail(self, response):
         content = json.loads(response.text)
@@ -132,7 +134,7 @@ class Myspider(scrapy.Spider):
             item['reposts_user_name'] = ""
             item['reposts_verified_type'] = ""
             item['reposts_user_followers'] = ""
-            item['download_pic'] = self.pic_download
+            item['download_pic'] = response.meta['download_pic']
             item['search_type'] = response.meta['search_type']
             item['search_key'] = response.meta['search_key']
             if 'retweeted_status' in data:
