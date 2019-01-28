@@ -16,8 +16,6 @@ class Myspider(scrapy.Spider):
         self.repost_dir = ""
         self.text_download = False
         self.pic_download = False
-        self.search_type = 0
-        self.search_key = ""
         self.line_list = line.split('@_@')
 
     def start_requests(self):
@@ -26,26 +24,26 @@ class Myspider(scrapy.Spider):
         for line in self.line_list:
             if not line[0].isdigit():
                 continue
-            type = int(line.split(',')[0])
-            self.search_key = line.split(',')[1]
+            spider_type = int(line.split(',')[0])
+            search_key = line.split(',')[1]
             max_range = 0
-            if type == 1:  # 1 基于用户id爬取
-                self.search_type = 1
+            if spider_type == 1:  # 1 基于用户id爬取
+                search_type = 1
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=107603" + \
                             line.split(',')[2]
                 max_range = line.split(',')[3]
                 self.pic_download = (line.split(',')[4].rsplit('\n')[
                     0]) == "True"
-            elif type == 2:  # 2 基于关键词爬取
-                self.search_type = line.split(',')[2]
+            elif spider_type == 2:  # 2 基于关键词爬取
+                search_type = line.split(',')[2]
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D" + \
                             line.split(',')[
-                                2] + "%26q%3D" + self.search_key + "&page_type=searchall"
+                                2] + "%26q%3D" + search_key + "&page_type=searchall"
                 max_range = line.split(',')[3]
                 self.pic_download = (line.split(',')[4].rsplit('\n')[
                     0]) == "True"
             if self.text_download:
-                self.folder_dir = '../微博/' + self.search_key
+                self.folder_dir = '../微博/' + search_key
                 self.detail_dir = self.folder_dir + '/Details'
                 self.repost_dir = self.detail_dir + '/Repost'
                 self.make_dir(self.folder_dir)
@@ -57,7 +55,9 @@ class Myspider(scrapy.Spider):
                     url = url_orgin
                 else:
                     url = str(url_orgin) + '&page=' + str(i)
-                yield Request(url, self.parse, meta={'page': str(i)})
+                yield Request(url, self.parse,
+                              meta={'page': str(i), 'search_type': search_type,
+                                    'search_key': search_key})
 
     def parse(self, response):
         data = json.loads(response.text)
@@ -67,7 +67,7 @@ class Myspider(scrapy.Spider):
                     'page'] + '.txt'
                 with open(text_dir, 'w') as f:
                     f.write(response.text)
-            if self.search_type == 1:
+            if response.meta['search_type'] == 1:
                 weibos = data['data']['cards']
             else:
                 cards = data['data']['cards']
@@ -78,7 +78,9 @@ class Myspider(scrapy.Spider):
                     continue
                 mblog = weibo['mblog']
                 url = "https://m.weibo.cn/statuses/show?id=" + mblog['bid']
-                yield Request(url, callback=self.parse_detail, dont_filter=True)
+                yield Request(url, callback=self.parse_detail, dont_filter=True,
+                              meta={'search_type': response.meta['search_type'],
+                                    'search_key': response.meta['search_key']})
 
     def parse_detail(self, response):
         content = json.loads(response.text)
@@ -131,8 +133,8 @@ class Myspider(scrapy.Spider):
             item['reposts_verified_type'] = ""
             item['reposts_user_followers'] = ""
             item['download_pic'] = self.pic_download
-            item['search_type'] = self.search_type
-            item['search_key'] = self.search_key
+            item['search_type'] = response.meta['search_type']
+            item['search_key'] = response.meta['search_key']
             if 'retweeted_status' in data:
                 repost_data = data['retweeted_status']
                 url = "https://m.weibo.cn/statuses/show?id=" + repost_data['id']

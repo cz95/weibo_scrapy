@@ -2,15 +2,11 @@
 
 import xlsxwriter
 import os
-import mysql.connector
+import sqlite3
 from tqdm import tqdm
 from weibo_scrapy import settings
 
-MYSQL_HOSTS = settings.MYSQL_HOSTS
-MYSQL_USER = settings.MYSQL_USER
-MYSQL_PASSWORD = settings.MYSQL_PASSWORD
-MYSQL_PORT = settings.MYSQL_PORT
-MYSQL_DB = settings.MYSQL_DB
+SQLITE_DB = settings.SQLITE_DB
 
 
 def make_dir(folder_dir):
@@ -43,9 +39,7 @@ def write_excel(name, search_type, search_key):
             '被转发微博id', '原微博内容', '原微博图片id', '原用户id', '原用户名', '原用户认证类型', '原用户粉丝数']
     for i in range(0, len(row0)):  # 写excel头部
         worksheet.write(0, i, row0[i])
-    db = mysql.connector.connect(user=MYSQL_USER, password=MYSQL_PASSWORD,
-                                 host=MYSQL_HOSTS, database=MYSQL_DB,
-                                 charset='utf8mb4')
+    db = sqlite3.connect(SQLITE_DB)
     cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
     if search_type == 1:
         sql = "SELECT * From sina_blog WHERE user_name = '{}' ORDER BY `time` DESC".format(
@@ -74,7 +68,7 @@ def write_excel(name, search_type, search_key):
 
 
 if __name__ == '__main__':
-    names = ['云闪付']
-    search_type = 1  # 1为基于用户id  60-热门 61-实时
+    names = ['重庆,61,重庆', '天盛长歌,60,天盛长歌']
+    search_type = 60  # 1为基于用户id  60-热门 61-实时
     for name in tqdm(names):
-        write_excel(name, search_type, name)
+        write_excel(name.split(',')[0], name.split(',')[1], name.split(',')[2])

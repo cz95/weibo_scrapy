@@ -1,6 +1,5 @@
 import scrapy
 from .sql import Sql
-from scrapy.exceptions import DropItem
 from weibo_scrapy.items import WeiboScrapyItem
 from scrapy.pipelines.images import ImagesPipeline
 from weibo_scrapy.settings import DEFAULT_REQUEST_HEADERS

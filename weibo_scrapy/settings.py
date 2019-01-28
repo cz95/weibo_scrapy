@@ -109,11 +109,7 @@ IMAGES_EXPIRES = 30
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-MYSQL_HOSTS = '127.0.0.1'
-MYSQL_USER = 'root'
-MYSQL_PASSWORD = 'root'
-MYSQL_PORT = '3306'
-MYSQL_DB = 'blog'
+SQLITE_DB = 'db/blog.db'
 
 PROXY = {
     "proxyHost": "http-dyn.abuyun.com",
