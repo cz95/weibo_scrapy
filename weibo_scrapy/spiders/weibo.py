@@ -15,46 +15,49 @@ class Myspider(scrapy.Spider):
         self.detail_dir = ""
         self.repost_dir = ""
         self.text_download = False
-        self.configs = line.split(',')
+        self.line_list = line.split('@_@')
 
     def start_requests(self):
-        if not self.configs[0].isdigit():
-            return
-        spider_type = int(self.configs[0].split(',')[0])
-        search_key = self.configs[1]
-        max_range = 0
-        if spider_type == 1:  # 1 基于用户id爬取
-            search_type = 1
-            url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=107603" + \
-                        self.configs[2]
-            max_range = self.configs[3]
-            download_pic = (self.configs[4].rsplit('\n')[
-                0]) == "True"
-        elif spider_type == 2:  # 2 基于关键词爬取
-            search_type = self.configs[2]
-            url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D" + \
-                        self.configs[
-                            2] + "%26q%3D" + search_key + "&page_type=searchall"
-            max_range = self.configs[3]
-            download_pic = (self.configs[4].rsplit('\n')[
-                0]) == "True"
-        if self.text_download:
-            self.folder_dir = '../微博/' + search_key
-            self.detail_dir = self.folder_dir + '/Details'
-            self.repost_dir = self.detail_dir + '/Repost'
-            self.make_dir(self.folder_dir)
-            self.make_dir(self.detail_dir)
-            self.make_dir(self.repost_dir)
-        start_num = 1
-        for i in range(start_num, int(max_range)):
-            if i == 1:
-                url = url_orgin
-            else:
-                url = str(url_orgin) + '&page=' + str(i)
-            yield Request(url, self.parse,
-                          meta={'page': str(i), 'search_type': search_type,
-                                'search_key': search_key,
-                                'download_pic': download_pic})
+        # f = open('config', 'r', encoding='utf-8')
+        # for line in f.readlines():
+        for line in self.line_list:
+            if not line[0].isdigit():
+                continue
+            spider_type = int(line.split(',')[0])
+            search_key = line.split(',')[1]
+            max_range = 0
+            if spider_type == 1:  # 1 基于用户id爬取
+                search_type = 1
+                url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=107603" + \
+                            line.split(',')[2]
+                max_range = line.split(',')[3]
+                download_pic = (line.split(',')[4].rsplit('\n')[
+                    0]) == "True"
+            elif spider_type == 2:  # 2 基于关键词爬取
+                search_type = line.split(',')[2]
+                url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D" + \
+                            line.split(',')[
+                                2] + "%26q%3D" + search_key + "&page_type=searchall"
+                max_range = line.split(',')[3]
+                download_pic = (line.split(',')[4].rsplit('\n')[
+                    0]) == "True"
+            if self.text_download:
+                self.folder_dir = '../微博/' + search_key
+                self.detail_dir = self.folder_dir + '/Details'
+                self.repost_dir = self.detail_dir + '/Repost'
+                self.make_dir(self.folder_dir)
+                self.make_dir(self.detail_dir)
+                self.make_dir(self.repost_dir)
+            start_num = 1
+            for i in range(start_num, int(max_range)):
+                if i == 1:
+                    url = url_orgin
+                else:
+                    url = str(url_orgin) + '&page=' + str(i)
+                yield Request(url, self.parse,
+                              meta={'page': str(i), 'search_type': search_type,
+                                    'search_key': search_key,
+                                    'download_pic': download_pic})
 
     def parse(self, response):
         data = json.loads(response.text)
@@ -74,7 +77,7 @@ class Myspider(scrapy.Spider):
                 if card_type != 9:  # 微博的card_type == 9
                     continue
                 mblog = weibo['mblog']
-                url = "https://m.weibo.cn/statuses/show?id=" + mblog['id']
+                url = "https://m.weibo.cn/statuses/show?id=" + mblog['bid']
                 yield Request(url, callback=self.parse_detail, dont_filter=True,
                               meta={'search_type': response.meta['search_type'],
                                     'search_key': response.meta['search_key'],
