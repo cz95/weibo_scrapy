@@ -103,7 +103,7 @@ class WeiboRepostExcel(object):
 
 if __name__ == '__main__':
     ## 命令行： python sql_to_excel.py weibo_repost  4243466675856175 中国工商_180525
-    ## 命令行： python sql_to_excel.py weibo  60 天盛长歌
+    ## 命令行： python sql_to_excel.py weibo 60 天盛长歌
     search_type = 60  # 1为基于用户id  60-热门 61-实时
     if sys.argv[1] == 'weibo':
         weibo = WeiboExcel()

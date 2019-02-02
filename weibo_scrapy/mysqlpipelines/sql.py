@@ -3,9 +3,6 @@ from weibo_scrapy import settings
 
 SQLITE_DB = settings.SQLITE_DB
 
-# cnx = mysql.connector.connect(user=MYSQL_USER, password=MYSQL_PASSWORD,
-#                               host=MYSQL_HOSTS, database=MYSQL_DB,
-#                               charset='utf8mb4')
 cnx = sqlite3.connect(database=SQLITE_DB)
 cur = cnx.cursor()
 
