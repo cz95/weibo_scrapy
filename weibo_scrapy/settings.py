@@ -115,7 +115,7 @@ PROXY = {
     "proxyHost": "http-dyn.abuyun.com",
     "proxyPort": "9020",
     "proxyUser": "H71T3JBR2Z762HSD",
-    "proxyPass": "07ACAA39EDD55595"
+    "proxyPass": "07ACAA39EDD55595",
 }
 
 USER_AGENTS = [
