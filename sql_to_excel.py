@@ -75,13 +75,13 @@ class WeiboExcel(object):
 class WeiboRepostExcel(object):
 
     def write_excel(self, id, search_key):
-        xlsx_name = search_key + '.xlsx'
+        xlsx_name = search_key + '_转发.xlsx'
         fold_dir = '../微博/汇总信息/'
         make_dir(fold_dir)
         xlsx_dir = os.path.join(fold_dir, xlsx_name)
         workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
         worksheet = workbook.add_worksheet('weiboInfo')
-        row0 = ['时间', '抓发内容', '用户名', '用户粉丝', '用户id', '性别', '认证类型']
+        row0 = ['时间', '转发内容', '用户名', '用户粉丝', '用户id', '性别', '认证类型']
         worksheet.write_row(0, 0, row0)
         db = sqlite3.connect(SQLITE_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
@@ -101,13 +101,45 @@ class WeiboRepostExcel(object):
         workbook.close()
 
 
+class WeiboCommentExcel(object):
+
+    def write_excel(self, id, search_key):
+        xlsx_name = search_key + '_评论.xlsx'
+        fold_dir = '../微博/汇总信息/'
+        make_dir(fold_dir)
+        xlsx_dir = os.path.join(fold_dir, xlsx_name)
+        workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
+        worksheet = workbook.add_worksheet('weiboInfo')
+        row0 = ['时间', '评论内容', '点赞数', '用户名', '认证类型', '用户id']
+        worksheet.write_row(0, 0, row0)
+        db = sqlite3.connect(SQLITE_DB)
+        cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
+        sql = "SELECT * From sina_blog_comment WHERE weibo_id = {} ORDER BY `created_at` DESC".format(
+            id)
+        cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
+        datas = cursor.fetchall()  # 使用 fetchone() 方法获取单条数据.
+        row_num = 1
+        points = [0]
+        for data in datas:
+            for index in range(0, len(row0) + 1):
+                if index in points:
+                    continue
+                worksheet.write(row_num, index - 1, data[index])
+            row_num = row_num + 1
+        db.close()
+        workbook.close()
+
 if __name__ == '__main__':
-    ## 命令行： python sql_to_excel.py weibo_repost  4243466675856175 中国工商_180525
-    ## 命令行： python sql_to_excel.py weibo 60 天盛长歌
+    ## 命令行 微博： python sql_to_excel.py weibo 60 天盛长歌
+    ## 命令行 转发： python sql_to_excel.py weibo_repost 4243466675856175 中国工商_180525
+    ## 命令行 评论： python sql_to_excel.py weibo_comment 4243466675856175 中国工商_180525
     search_type = 60  # 1为基于用户id  60-热门 61-实时
     if sys.argv[1] == 'weibo':
         weibo = WeiboExcel()
         weibo.write_excel(sys.argv[2], sys.argv[3])
-    else:
+    elif sys.argv[1] == 'weibo_repost':
         weibo_repost = WeiboRepostExcel()
         weibo_repost.write_excel(sys.argv[2], sys.argv[3])
+    else:
+        weibo_comment = WeiboCommentExcel()
+        weibo_comment.write_excel(sys.argv[2], sys.argv[3])

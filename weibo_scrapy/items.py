@@ -60,14 +60,14 @@ class WeiboRepostScrapyItem(scrapy.Item):
 
 class WeiboCommentScrapyItem(scrapy.Item):
     # define the fields for your item here like:
-    comment_id = scrapy.Field()  # 转发微博id
+    comment_id = scrapy.Field()  # 评论微博id
     created_at = scrapy.Field()  # 创建时间
     text = scrapy.Field()  # 内容
     like_counts = scrapy.Field()  # 点赞数
     user_name = scrapy.Field()  # 用户名
     user_id = scrapy.Field()  # 用户id
     verified_type = scrapy.Field()  # 认证类型
-    weibo_id = scrapy.Field()  # 被转发微博id
+    weibo_id = scrapy.Field()  # 被评论微博id
     weibo_name = scrapy.Field()  # 抓取的微博名
     download_pic = scrapy.Field()  # 是否下载微博图片, 主要用于避开pipline
     pass
