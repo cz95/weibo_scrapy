@@ -21,8 +21,8 @@ class WeiboSql:
             sql = 'INSERT INTO sina_blog VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
         value = (
             user_id, user_name, verified_type, user_followers, time, weibo_id,
-            text, text_len, source, pic_id, vedio_url, reposts, attitudes,
-            comments, is_long_text, is_reposts, reposts_time, reposts_id,
+            text, text_len, source, pic_id, vedio_url, reposts, comments,
+            attitudes, is_long_text, is_reposts, reposts_time, reposts_id,
             reposts_text, reposts_pic_id, reposts_user_id, reposts_user_name,
             reposts_verified_type, reposts_user_followers, scrapy_type,
             search_key)

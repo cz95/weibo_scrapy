@@ -21,7 +21,7 @@ class Myspider(scrapy.Spider):
         # f = open('config', 'r', encoding='utf-8')
         # for line in f.readlines():
         for line in self.line_list:
-            if not line[0].isdigit():
+            if line != "" and not line[0].isdigit():
                 continue
             spider_type = int(line.split(',')[0])
             search_key = line.split(',')[1]
@@ -30,7 +30,7 @@ class Myspider(scrapy.Spider):
                 search_type = 1
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=107603" + \
                             line.split(',')[2]
-                max_range = line.split(',')[3] + 1
+                max_range = int(line.split(',')[3]) + 1
                 download_pic = (line.split(',')[4].rsplit('\n')[
                     0]) == "True"
             elif spider_type == 2:  # 2 基于关键词爬取
@@ -38,7 +38,7 @@ class Myspider(scrapy.Spider):
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D" + \
                             line.split(',')[
                                 2] + "%26q%3D" + search_key + "&page_type=searchall"
-                max_range = line.split(',')[3] + 1
+                max_range = int(line.split(',')[3]) + 1
                 download_pic = (line.split(',')[4].rsplit('\n')[
                     0]) == "True"
             if self.text_download:

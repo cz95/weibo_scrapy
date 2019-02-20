@@ -4,6 +4,7 @@ import scrapy
 from scrapy.http import Request
 from weibo_scrapy.items import WeiboCommentScrapyItem
 import json
+import re
 
 
 class Myspider(scrapy.Spider):
@@ -34,7 +35,7 @@ class Myspider(scrapy.Spider):
             item = WeiboCommentScrapyItem()
             item['comment_id'] = data['id']
             item['created_at'] = data['created_at']
-            item['text'] = data['text']
+            item['text'] = re.sub('<.*?>|回复<.*?>:|[\U00010000-\U0010ffff]|[\uD800-\uDBFF][\uDC00-\uDFFF]', '', data['text'])
             item['like_counts'] = data['like_counts']
             user = data['user']
             item['user_name'] = user['screen_name']
