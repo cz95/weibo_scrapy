@@ -1,6 +1,6 @@
 import scrapy
-from .sql import WeiboSql, RepostSql
-from weibo_scrapy.items import WeiboScrapyItem, WeiboRepostScrapyItem
+from .sql import WeiboSql, RepostSql, CommentSql
+from weibo_scrapy.items import WeiboScrapyItem, WeiboRepostScrapyItem, WeiboCommentScrapyItem
 from scrapy.pipelines.images import ImagesPipeline
 from weibo_scrapy.settings import DEFAULT_REQUEST_HEADERS
 
@@ -88,7 +88,8 @@ class WeiboPipeline(object):
                                          attitudes, is_long_text, is_reposts,
                                          reposts_time, reposts_id, reposts_text,
                                          reposts_pic_id, reposts_user_id,
-                                         reposts_user_name, reposts_verified_type,
+                                         reposts_user_name,
+                                         reposts_verified_type,
                                          reposts_user_followers, search_type,
                                          search_key)
         elif spider.name == "weibo_repost":
@@ -115,4 +116,25 @@ class WeiboPipeline(object):
                                           followers_count, user_id, gender,
                                           verified_type,
                                           weibo_id, weibo_name)
+        elif spider.name == "weibo_comment":
+            if isinstance(item, WeiboCommentScrapyItem):
+                comment_id = item['comment_id']
+                ret = CommentSql.selet_blog_id(comment_id)
+                if ret[0] == 1:
+                    print('微博转发已经存在了')
+                    pass
+                else:
+                    comment_id = item['comment_id']
+                    created_at = item['created_at']
+                    text = item['text']
+                    like_counts = item['like_counts']
+                    user_name = item['user_name']
+                    user_id = item['user_id']
+                    verified_type = item['verified_type']
+                    weibo_id = item['weibo_id']
+                    weibo_name = item['weibo_name']
+                    print("存储数据微博评论")
+                    CommentSql.insert_blog(comment_id, created_at, text,
+                                          like_counts, user_name, user_id,
+                                          verified_type, weibo_id, weibo_name)
         return item

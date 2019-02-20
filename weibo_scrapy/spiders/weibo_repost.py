@@ -1,7 +1,6 @@
 #!/usr/bin/Python
 # -*- coding: utf-8 -*-
 import scrapy
-from bs4 import BeautifulSoup
 from scrapy.http import Request
 from weibo_scrapy.items import WeiboRepostScrapyItem
 import json
@@ -14,11 +13,12 @@ class Myspider(scrapy.Spider):
         self.line_list = line.split('@_@')
 
     def start_requests(self):
-        f = open('config', 'r', encoding='utf-8')
         for line in self.line_list:
+            if line == "":
+                continue
             weibo_name = line.split(',')[0]
             weibo_id = line.split(',')[1]
-            max_range = int(line.split(',')[2])
+            max_range = int(line.split(',')[2]) + 1
             url = 'https://m.weibo.cn/api/statuses/repostTimeline?id=' + weibo_id + '&page='
             for i in range(1, int(max_range)):
                 url_req = url + str(i)

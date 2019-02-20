@@ -26,7 +26,7 @@ CONCURRENT_REQUESTS = 16
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0.2
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -47,6 +47,7 @@ DEFAULT_REQUEST_HEADERS = {
     'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
     'Host': 'm.weibo.cn',
     'Accept-Encoding': 'gzip, deflate,br',
+    'Upgrade-Insecure-Requests': '1',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0'
 }
 
@@ -59,8 +60,8 @@ DEFAULT_REQUEST_HEADERS = {
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'weibo_scrapy.middlewares.WeiboScrapyDownloaderMiddleware': 543,
-    # 'weibo_scrapy.middlewares.ProxyMiddleware': 123
+    # 'weibo_scrapy.middlewares.WeiboScrapyDownloaderMiddleware': 543,
+    'weibo_scrapy.middlewares.ProxyMiddleware': 123
 }
 
 # Enable or disable extensions

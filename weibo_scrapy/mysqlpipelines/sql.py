@@ -45,15 +45,32 @@ class RepostSql:
     def insert_blog(cls, id, created_at, raw_text, user_name, followers_count,
                     user_id, gender, verified_type, weibo_id, weibo_name):
         sql = 'INSERT INTO sina_blog_repost VALUES (?,?,?,?,?,?,?,?,?,?)'
-        value = (
-            id, created_at, raw_text, user_name, followers_count, user_id,
-            gender, verified_type, weibo_id, weibo_name)
+        value = (id, created_at, raw_text, user_name, followers_count, user_id,
+                 gender, verified_type, weibo_id, weibo_name)
         cur.execute(sql, value)
         cnx.commit()
 
     @classmethod
     def selet_blog_id(cls, id):
         sql = 'SELECT EXISTS ( SELECT 1 FROM sina_blog_repost WHERE id = ? )'
+        value = (id,)
+        cur.execute(sql, value)
+        return cur.fetchall()[0]
+
+
+class CommentSql:
+    @classmethod
+    def insert_blog(cls, id, created_at, text, like_counts, user_name,
+                    user_id, verified_type, weibo_id, weibo_name):
+        sql = 'INSERT INTO sina_blog_comment VALUES (?,?,?,?,?,?,?,?,?)'
+        value = (id, created_at, text, like_counts, user_name,
+                 user_id, verified_type, weibo_id, weibo_name)
+        cur.execute(sql, value)
+        cnx.commit()
+
+    @classmethod
+    def selet_blog_id(cls, id):
+        sql = 'SELECT EXISTS ( SELECT 1 FROM sina_blog_comment WHERE id = ? )'
         value = (id,)
         cur.execute(sql, value)
         return cur.fetchall()[0]
