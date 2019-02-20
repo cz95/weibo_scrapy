@@ -30,18 +30,19 @@ class Myspider(scrapy.Spider):
     def parse(self, response):
         data = json.loads(response.text)
         data = data[-1]
-        data_list = data['card_group']
-        for data in data_list:
-            item = WeiboCommentScrapyItem()
-            item['comment_id'] = data['id']
-            item['created_at'] = data['created_at']
-            item['text'] = re.sub('<.*?>|回复<.*?>:|[\U00010000-\U0010ffff]|[\uD800-\uDBFF][\uDC00-\uDFFF]', '', data['text'])
-            item['like_counts'] = data['like_counts']
-            user = data['user']
-            item['user_name'] = user['screen_name']
-            item['verified_type'] = user['verified_type']
-            item['user_id'] = user['id']
-            item['weibo_id'] = response.meta['weibo_id']
-            item['weibo_name'] = response.meta['weibo_name']
-            item['download_pic'] = False
-            yield item
+        if 'card_group' in data:
+            data_list = data['card_group']
+            for data in data_list:
+                item = WeiboCommentScrapyItem()
+                item['comment_id'] = data['id']
+                item['created_at'] = data['created_at']
+                item['text'] = re.sub('<.*?>|回复<.*?>:|[\U00010000-\U0010ffff]|[\uD800-\uDBFF][\uDC00-\uDFFF]', '', data['text'])
+                item['like_counts'] = data['like_counts']
+                user = data['user']
+                item['user_name'] = user['screen_name']
+                item['verified_type'] = user['verified_type']
+                item['user_id'] = user['id']
+                item['weibo_id'] = response.meta['weibo_id']
+                item['weibo_name'] = response.meta['weibo_name']
+                item['download_pic'] = False
+                yield item
