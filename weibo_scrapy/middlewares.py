@@ -13,17 +13,19 @@ from weibo_scrapy.settings import PROXY
 import base64
 
 
-# class ProxyMiddleware(object):
-#     # 代理服务器
-#     proxyServer = "http://http-dyn.abuyun.com:9020"
-#     # 代理隧道验证信息
-#     proxyAuth = "Basic " + base64.urlsafe_b64encode(bytes((PROXY['proxyUser'] + ":" + PROXY['proxyPass']), "ascii")).decode("utf8")
-#
-#     def process_request(self, request, spider):
-#         user_agents = random.choice(USER_AGENTS)
-#         request.headers.setdefault('User-Agent', user_agents)
-#         request.meta["proxy"] = self.proxyServer
-#         request.headers["Proxy-Authorization"] = self.proxyAuth
+class ProxyMiddleware(object):
+    # 代理服务器
+    proxyServer = "http://http-dyn.abuyun.com:9020"
+    # 代理隧道验证信息
+    proxyAuth = "Basic " + base64.urlsafe_b64encode(
+        bytes((PROXY['proxyUser'] + ":" + PROXY['proxyPass']), "ascii")).decode(
+        "utf8")
+
+    def process_request(self, request, spider):
+        user_agents = random.choice(USER_AGENTS)
+        request.headers.setdefault('User-Agent', user_agents)
+        request.meta["proxy"] = self.proxyServer
+        request.headers["Proxy-Authorization"] = self.proxyAuth
 
 
 class Timer(object):
