@@ -27,7 +27,7 @@ class Myspider(scrapy.Spider):
             search_key = line.split(',')[1]
             max_range = 0
             if spider_type == 1:  # 1 基于用户id爬取
-                search_type = 1
+                search_type = -1
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=107603" + \
                             line.split(',')[2]
                 max_range = int(line.split(',')[3]) + 1
@@ -67,7 +67,7 @@ class Myspider(scrapy.Spider):
                     'page'] + '.txt'
                 with open(text_dir, 'w') as f:
                     f.write(response.text)
-            if response.meta['search_type'] == 1:
+            if response.meta['search_type'] == -1:
                 weibos = data['data']['cards']
             else:
                 cards = data['data']['cards']
