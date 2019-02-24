@@ -4,7 +4,6 @@ import xlsxwriter
 import os
 import sqlite3
 import sys
-from tqdm import tqdm
 from weibo_scrapy import settings
 
 SQLITE_DB = settings.SQLITE_DB
