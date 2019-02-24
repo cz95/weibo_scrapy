@@ -8,6 +8,10 @@ from weibo_scrapy import settings
 
 SQLITE_DB = settings.SQLITE_DB
 
+weibo_type = {-1: "用户抓取", 1: "综合抓取", 60: "热门抓取", 61: "实时抓取"}
+weibo_type_inv = {"用户抓取": -1, "综合抓取": 1, "热门抓取": 60, "实时抓取": 61,
+              "微博转发": 100, "微博评论": 101}
+
 
 def make_dir(folder_dir):
     folder = os.path.exists(folder_dir)
@@ -29,8 +33,8 @@ def match(x):
 
 class WeiboExcel(object):
 
-    def write_excel(self, search_type, search_key):
-        xlsx_name = search_key + '.xlsx'
+    def write_excel(self, search_key, search_type):
+        xlsx_name = search_key + "_" + weibo_type[search_type] + '.xlsx'
         fold_dir = '../微博/汇总信息/'
         make_dir(fold_dir)
         xlsx_dir = os.path.join(fold_dir, xlsx_name)
@@ -44,7 +48,7 @@ class WeiboExcel(object):
         worksheet.write_row(0, 0, row0)
         db = sqlite3.connect(SQLITE_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
-        if search_type == 1:
+        if search_type == -1:
             sql = "SELECT * From sina_blog WHERE user_name = '{}' ORDER BY `time` DESC".format(
                 search_key)
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
@@ -67,13 +71,14 @@ class WeiboExcel(object):
                 worksheet.write(row_num, 17,
                                 "https://m.weibo.cn/status/" + str(data[17]))
             row_num = row_num + 1
+        cursor.close()
         db.close()
         workbook.close()
 
 
 class WeiboRepostExcel(object):
 
-    def write_excel(self, id, search_key):
+    def write_excel(self, search_key):
         xlsx_name = search_key + '_转发.xlsx'
         fold_dir = '../微博/汇总信息/'
         make_dir(fold_dir)
@@ -84,8 +89,8 @@ class WeiboRepostExcel(object):
         worksheet.write_row(0, 0, row0)
         db = sqlite3.connect(SQLITE_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
-        sql = "SELECT * From sina_blog_repost WHERE weibo_id = {} ORDER BY `created_at` DESC".format(
-            id)
+        sql = "SELECT * From sina_blog_repost WHERE weibo_name = '{}' ORDER BY `created_at` DESC".format(
+            search_key)
         cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
         datas = cursor.fetchall()  # 使用 fetchone() 方法获取单条数据.
         row_num = 1
@@ -96,13 +101,14 @@ class WeiboRepostExcel(object):
                     continue
                 worksheet.write(row_num, index - 1, data[index])
             row_num = row_num + 1
+        cursor.close()
         db.close()
         workbook.close()
 
 
 class WeiboCommentExcel(object):
 
-    def write_excel(self, id, search_key):
+    def write_excel(self, search_key):
         xlsx_name = search_key + '_评论.xlsx'
         fold_dir = '../微博/汇总信息/'
         make_dir(fold_dir)
@@ -113,8 +119,8 @@ class WeiboCommentExcel(object):
         worksheet.write_row(0, 0, row0)
         db = sqlite3.connect(SQLITE_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
-        sql = "SELECT * From sina_blog_comment WHERE weibo_id = {} ORDER BY `created_at` DESC".format(
-            id)
+        sql = "SELECT * From sina_blog_comment WHERE weibo_name = '{}' ORDER BY `created_at` DESC".format(
+            search_key)
         cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
         datas = cursor.fetchall()  # 使用 fetchone() 方法获取单条数据.
         row_num = 1
@@ -125,20 +131,21 @@ class WeiboCommentExcel(object):
                     continue
                 worksheet.write(row_num, index - 1, data[index])
             row_num = row_num + 1
+        cursor.close()
         db.close()
         workbook.close()
 
+## 命令行： python sql_to_excel.py {key} {type}
+## 命令行 删除： python history_record.py {key} {type}  例如 python history_record.py 交通大学 用户抓取
+## 命令行 删除： type取值有：用户抓取, 综合抓取, 热门抓取, 实时抓取, 微博转发, 微博评论
 if __name__ == '__main__':
-    ## 命令行 微博： python sql_to_excel.py weibo 60 天盛长歌
-    ## 命令行 转发： python sql_to_excel.py weibo_repost 4243466675856175 中国工商_180525
-    ## 命令行 评论： python sql_to_excel.py weibo_comment 4243466675856175 中国工商_180525
-    search_type = 60  # 1为基于用户id  60-热门 61-实时
-    if sys.argv[1] == 'weibo':
+    int_type = weibo_type_inv[sys.argv[2]]
+    if (int_type < 62):
         weibo = WeiboExcel()
-        weibo.write_excel(sys.argv[2], sys.argv[3])
-    elif sys.argv[1] == 'weibo_repost':
+        weibo.write_excel(sys.argv[1], int_type)
+    elif (int_type == 100):
         weibo_repost = WeiboRepostExcel()
-        weibo_repost.write_excel(sys.argv[2], sys.argv[3])
+        weibo_repost.write_excel(sys.argv[1])
     else:
         weibo_comment = WeiboCommentExcel()
-        weibo_comment.write_excel(sys.argv[2], sys.argv[3])
+        weibo_comment.write_excel(sys.argv[1])
