@@ -137,3 +137,7 @@ USER_AGENTS = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20",
     "Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; fr) Presto/2.9.168 Version/11.52",
 ]
+
+INT_TO_TYPE = {-1: "用户抓取", 1: "综合抓取", 60: "热门抓取", 61: "实时抓取"}
+TYPE_TO_INT = {"用户抓取": -1, "综合抓取": 1, "热门抓取": 60, "实时抓取": 61,
+              "微博转发": 100, "微博评论": 101}

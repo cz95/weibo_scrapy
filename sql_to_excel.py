@@ -7,10 +7,8 @@ import sys
 from weibo_scrapy import settings
 
 SQLITE_DB = settings.SQLITE_DB
-
-weibo_type = {-1: "用户抓取", 1: "综合抓取", 60: "热门抓取", 61: "实时抓取"}
-weibo_type_inv = {"用户抓取": -1, "综合抓取": 1, "热门抓取": 60, "实时抓取": 61,
-              "微博转发": 100, "微博评论": 101}
+INT_TO_TYPE = settings.INT_TO_TYPE
+TYPE_TO_INT = settings.TYPE_TO_INT
 
 
 def make_dir(folder_dir):
@@ -34,7 +32,7 @@ def match(x):
 class WeiboExcel(object):
 
     def write_excel(self, search_key, search_type):
-        xlsx_name = search_key + "_" + weibo_type[search_type] + '.xlsx'
+        xlsx_name = search_key + "_" + search_type + '.xlsx'
         fold_dir = '../微博/汇总信息/'
         make_dir(fold_dir)
         xlsx_dir = os.path.join(fold_dir, xlsx_name)
@@ -54,7 +52,7 @@ class WeiboExcel(object):
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
         else:
             sql = "SELECT * From sina_blog WHERE search_type = '{}' AND search_key = '{}' ORDER BY `time` DESC".format(
-                search_type, search_key)
+                TYPE_TO_INT[search_type], search_key)
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
         datas = cursor.fetchall()  # 使用 fetchone() 方法获取单条数据.
         row_num = 1
@@ -136,13 +134,13 @@ class WeiboCommentExcel(object):
         workbook.close()
 
 ## 命令行： python sql_to_excel.py {key} {type}
-## 命令行 删除： python history_record.py {key} {type}  例如 python history_record.py 交通大学 用户抓取
+## 命令行 删除： python history_record.py {key} {type}  例如 python history_record.py 交通大学 热门抓取
 ## 命令行 删除： type取值有：用户抓取, 综合抓取, 热门抓取, 实时抓取, 微博转发, 微博评论
 if __name__ == '__main__':
-    int_type = weibo_type_inv[sys.argv[2]]
+    int_type = TYPE_TO_INT[sys.argv[2]]
     if (int_type < 62):
         weibo = WeiboExcel()
-        weibo.write_excel(sys.argv[1], int_type)
+        weibo.write_excel(sys.argv[1], sys.argv[2])
     elif (int_type == 100):
         weibo_repost = WeiboRepostExcel()
         weibo_repost.write_excel(sys.argv[1])
