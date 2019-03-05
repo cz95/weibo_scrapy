@@ -18,9 +18,10 @@ class Myspider(scrapy.Spider):
                 continue
             weibo_name = line.split(',')[0]
             weibo_id = line.split(',')[1]
-            max_range = int(line.split(',')[2]) + 1
+            max_range = int(line.split(',')[2])
             url = 'https://m.weibo.cn/api/statuses/repostTimeline?id=' + weibo_id + '&page='
-            for i in range(1, int(max_range)):
+            for i in range(1, int(max_range + 1)):
+                print("===当前访问页数===", i, " / ", max_range, "")
                 url_req = url + str(i)
                 yield Request(url_req, self.parse,
                               meta={'weibo_name': weibo_name})

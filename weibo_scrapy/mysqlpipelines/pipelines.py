@@ -16,6 +16,7 @@ class WeiboImagePipeline(ImagesPipeline):
                 url = 'http://wx1.sinaimg.cn/large/' + image_id + '.jpg'
                 i = i + 1
                 pic_name = self.format_time(item['time']) + str(i) + '.jpg'
+                print("###下载图片成功###", "  图片名为：", pic_name)
                 yield scrapy.Request(url, headers=DEFAULT_REQUEST_HEADERS,
                                      meta={'user_name': item['user_name'],
                                            'pic_name': pic_name})
@@ -23,6 +24,7 @@ class WeiboImagePipeline(ImagesPipeline):
                 url = 'http://wx1.sinaimg.cn/large/' + image_id + '.jpg'
                 i = i + 1
                 pic_name = self.format_time(item['time']) + str(i) + '.jpg'
+                print("###下载图片成功###", "  图片名为：", pic_name)
                 yield scrapy.Request(url, headers=DEFAULT_REQUEST_HEADERS,
                                      meta={'user_name': item['user_name'],
                                            'pic_name': pic_name})
@@ -51,7 +53,9 @@ class WeiboPipeline(object):
                 weibo_id = item['weibo_id']
                 ret = WeiboSql.selet_blog_id(weibo_id)
                 if ret[0] == 1:
-                    print('微博已经存在了')
+                    time = item['time']  # 时间
+                    user_name = item['user_name']  # 用户姓名
+                    print("***该微博已存在***", "  时间：",time,"  用户名：", user_name)
                     pass
                 else:
                     user_id = item['user_id']  # 用户id
@@ -79,7 +83,7 @@ class WeiboPipeline(object):
                     reposts_verified_type = item['reposts_verified_type']
                     reposts_user_followers = item[
                         'reposts_user_followers']  # 转发微博用户粉丝数
-                    print("存储数据: " + user_name)
+                    print("---存储微博数据---", "  时间：",time,"  用户名：", user_name)
                     WeiboSql.insert_blog(user_id, user_name, verified_type,
                                          user_followers, time, weibo_id, text,
                                          text_len,
@@ -97,7 +101,9 @@ class WeiboPipeline(object):
                 repost_id = item['repost_id']
                 ret = RepostSql.selet_blog_id(repost_id)
                 if ret[0] == 1:
-                    print('微博转发已经存在了')
+                    created_at = item['created_at']
+                    user_name = item['user_name']
+                    print('***该转发已存在***', "  时间：",created_at,"  用户名：", user_name)
                     pass
                 else:
                     repost_id = item['repost_id']
@@ -110,7 +116,7 @@ class WeiboPipeline(object):
                     verified_type = item['verified_type']
                     weibo_id = item['weibo_id']
                     weibo_name = item['weibo_name']
-                    print("存储数据转发微博")
+                    print("---存储转发数据---", "  时间：",created_at,"  用户名：", user_name)
                     RepostSql.insert_blog(repost_id, created_at, raw_text,
                                           user_name,
                                           followers_count, user_id, gender,
@@ -121,7 +127,9 @@ class WeiboPipeline(object):
                 comment_id = item['comment_id']
                 ret = CommentSql.selet_blog_id(comment_id)
                 if ret[0] == 1:
-                    print('微博转发已经存在了')
+                    created_at = item['created_at']
+                    user_name = item['user_name']
+                    print('***该评论已存在***', "  时间：",created_at,"  用户名：", user_name)
                     pass
                 else:
                     comment_id = item['comment_id']
@@ -133,7 +141,7 @@ class WeiboPipeline(object):
                     verified_type = item['verified_type']
                     weibo_id = item['weibo_id']
                     weibo_name = item['weibo_name']
-                    print("存储数据微博评论")
+                    print("---存储评论数据---", "  时间：",created_at,"  用户名：", user_name)
                     CommentSql.insert_blog(comment_id, created_at, text,
                                           like_counts, user_name, user_id,
                                           verified_type, weibo_id, weibo_name)

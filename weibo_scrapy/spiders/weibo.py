@@ -30,7 +30,7 @@ class Myspider(scrapy.Spider):
                 search_type = -1
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=107603" + \
                             line.split(',')[2]
-                max_range = int(line.split(',')[3]) + 1
+                max_range = int(line.split(',')[3])
                 download_pic = (line.split(',')[4].rsplit('\n')[
                     0]) == "True"
             elif spider_type == 2:  # 2 基于关键词爬取
@@ -38,7 +38,7 @@ class Myspider(scrapy.Spider):
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D" + \
                             line.split(',')[
                                 2] + "%26q%3D" + search_key + "&page_type=searchall"
-                max_range = int(line.split(',')[3]) + 1
+                max_range = int(line.split(',')[3])
                 download_pic = (line.split(',')[4].rsplit('\n')[
                     0]) == "True"
             if self.text_download:
@@ -49,7 +49,8 @@ class Myspider(scrapy.Spider):
                 self.make_dir(self.detail_dir)
                 self.make_dir(self.repost_dir)
             start_num = 1
-            for i in range(start_num, int(max_range)):
+            for i in range(start_num, int(max_range + 1)):
+                print("总页数:", max_range, "   当前访问页数:", i, )
                 if i == 1:
                     url = url_orgin
                 else:
@@ -90,8 +91,6 @@ class Myspider(scrapy.Spider):
             item = WeiboScrapyItem()
             data = content['data']
             item['time'] = self.parse_time(data['created_at'])
-            print(
-                'parse_detail    time = ' + self.parse_time(data['created_at']))
             if self.text_download:
                 detail_text = self.detail_dir + '/' + self.format_time(
                     item['time']) + '.txt'
@@ -178,7 +177,7 @@ class Myspider(scrapy.Spider):
         folder = os.path.exists(folder_dir)
         if not folder:
             os.makedirs(folder_dir)
-            print("创建文件夹" + folder_dir)
+            print("创建文件夹：" + folder_dir)
 
     def parse_time(self, times):
         FORMAT = '%a %b %d %H:%M:%S +0800 %Y'
