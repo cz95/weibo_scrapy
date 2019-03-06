@@ -11,6 +11,8 @@
 
 BOT_NAME = 'weibo_scrapy'
 
+LOG_LEVEL = 'INFO'
+
 SPIDER_MODULES = ['weibo_scrapy.spiders']
 NEWSPIDER_MODULE = 'weibo_scrapy.spiders'
 
@@ -110,13 +112,13 @@ IMAGES_EXPIRES = 30
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-SQLITE_DB = 'db/blog.db'
+SQLITE3_DB = 'db/blog.db'
 
 PROXY = {
     "proxyHost": "http-dyn.abuyun.com",
     "proxyPort": "9020",
-    "proxyUser": "H71T3JBR2Z762HSD",
-    "proxyPass": "07ACAA39EDD55595",
+    "proxyUser": "H32G2872CU64512D",
+    "proxyPass": "136406B2BD161CB9",
 }
 
 USER_AGENTS = [

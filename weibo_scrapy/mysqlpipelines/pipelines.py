@@ -3,9 +3,12 @@ from .sql import WeiboSql, RepostSql, CommentSql
 from weibo_scrapy.items import WeiboScrapyItem, WeiboRepostScrapyItem, WeiboCommentScrapyItem
 from scrapy.pipelines.images import ImagesPipeline
 from weibo_scrapy.settings import DEFAULT_REQUEST_HEADERS
+import logging
 
 
 class WeiboImagePipeline(ImagesPipeline):
+
+    img_log = logging.getLogger('下载图片')
 
     def get_media_requests(self, item, info):
         if item['download_pic']:
@@ -16,7 +19,8 @@ class WeiboImagePipeline(ImagesPipeline):
                 url = 'http://wx1.sinaimg.cn/large/' + image_id + '.jpg'
                 i = i + 1
                 pic_name = self.format_time(item['time']) + str(i) + '.jpg'
-                print("###下载图片成功###", "  图片名为：", pic_name)
+                msg = "#下载图片成功  图片名为：".format(pic_name)
+                self.img_log.info(msg)
                 yield scrapy.Request(url, headers=DEFAULT_REQUEST_HEADERS,
                                      meta={'user_name': item['user_name'],
                                            'pic_name': pic_name})
@@ -24,7 +28,8 @@ class WeiboImagePipeline(ImagesPipeline):
                 url = 'http://wx1.sinaimg.cn/large/' + image_id + '.jpg'
                 i = i + 1
                 pic_name = self.format_time(item['time']) + str(i) + '.jpg'
-                print("###下载图片成功###", "  图片名为：", pic_name)
+                msg = "#下载图片成功  图片名为：".format(pic_name)
+                self.img_log.info(msg)
                 yield scrapy.Request(url, headers=DEFAULT_REQUEST_HEADERS,
                                      meta={'user_name': item['user_name'],
                                            'pic_name': pic_name})
@@ -45,6 +50,9 @@ class WeiboImagePipeline(ImagesPipeline):
 
 class WeiboPipeline(object):
 
+    def __init__(self):
+        self.logger = logging.getLogger('存储信息')
+
     def process_item(self, item, spider):
         if spider.name == "weibo":
             search_type = item['search_type']  # 抓取类型
@@ -55,7 +63,8 @@ class WeiboPipeline(object):
                 if ret[0] == 1:
                     time = item['time']  # 时间
                     user_name = item['user_name']  # 用户姓名
-                    print("***该微博已存在***", "  时间：",time,"  用户名：", user_name)
+                    msg = "*当前任务：{}    该微博已存在    此条微博发布时间：{}".format(user_name, time)
+                    self.logger.info(msg)
                     pass
                 else:
                     user_id = item['user_id']  # 用户id
@@ -83,7 +92,8 @@ class WeiboPipeline(object):
                     reposts_verified_type = item['reposts_verified_type']
                     reposts_user_followers = item[
                         'reposts_user_followers']  # 转发微博用户粉丝数
-                    print("---存储微博数据---", "  时间：",time,"  用户名：", user_name)
+                    msg = "-当前任务：{}    存储微博数据    此条微博发布时间：{}".format(user_name, time)
+                    self.logger.info(msg)
                     WeiboSql.insert_blog(user_id, user_name, verified_type,
                                          user_followers, time, weibo_id, text,
                                          text_len,
@@ -103,7 +113,8 @@ class WeiboPipeline(object):
                 if ret[0] == 1:
                     created_at = item['created_at']
                     user_name = item['user_name']
-                    print('***该转发已存在***', "  时间：",created_at,"  用户名：", user_name)
+                    msg = "*当前任务：{}    该转发已存在*    此条微博发布时间：{}".format(user_name, created_at)
+                    self.logger.info(msg)
                     pass
                 else:
                     repost_id = item['repost_id']
@@ -116,7 +127,8 @@ class WeiboPipeline(object):
                     verified_type = item['verified_type']
                     weibo_id = item['weibo_id']
                     weibo_name = item['weibo_name']
-                    print("---存储转发数据---", "  时间：",created_at,"  用户名：", user_name)
+                    msg = "-当前任务：{}    存储转发数据    此条微博发布时间：{}".format(user_name, created_at)
+                    self.logger.info(msg)
                     RepostSql.insert_blog(repost_id, created_at, raw_text,
                                           user_name,
                                           followers_count, user_id, gender,
@@ -129,7 +141,8 @@ class WeiboPipeline(object):
                 if ret[0] == 1:
                     created_at = item['created_at']
                     user_name = item['user_name']
-                    print('***该评论已存在***', "  时间：",created_at,"  用户名：", user_name)
+                    msg = "*当前任务：{}    该条评论已存在    此条评论发布时间：{}".format(user_name, created_at)
+                    self.logger.info(msg)
                     pass
                 else:
                     comment_id = item['comment_id']
@@ -141,7 +154,8 @@ class WeiboPipeline(object):
                     verified_type = item['verified_type']
                     weibo_id = item['weibo_id']
                     weibo_name = item['weibo_name']
-                    print("---存储评论数据---", "  时间：",created_at,"  用户名：", user_name)
+                    msg = "-当前任务：{}    存储评论数据    此条微博发布时间：{}".format(user_name, created_at)
+                    self.logger.info(msg)
                     CommentSql.insert_blog(comment_id, created_at, text,
                                           like_counts, user_name, user_id,
                                           verified_type, weibo_id, weibo_name)

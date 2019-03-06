@@ -7,6 +7,7 @@ import time
 import json
 
 
+
 class Myspider(scrapy.Spider):
     name = 'weibo'
 
@@ -21,7 +22,7 @@ class Myspider(scrapy.Spider):
         # f = open('config', 'r', encoding='utf-8')
         # for line in f.readlines():
         for line in self.line_list:
-            if line != "" and not line[0].isdigit():
+            if line == "":
                 continue
             spider_type = int(line.split(',')[0])
             search_key = line.split(',')[1]
@@ -50,7 +51,8 @@ class Myspider(scrapy.Spider):
                 self.make_dir(self.repost_dir)
             start_num = 1
             for i in range(start_num, int(max_range + 1)):
-                print("总页数:", max_range, "   当前访问页数:", i, )
+                msg = "当前爬取任务：{}   总页数：{}   正在访问页数：{}".format(search_key, max_range, i)
+                self.logger.info(msg)
                 if i == 1:
                     url = url_orgin
                 else:
@@ -152,7 +154,6 @@ class Myspider(scrapy.Spider):
             if self.text_download:
                 repost_text_dir = self.repost_dir + '/' + response.meta[
                     'id'] + '.txt'
-                print("下载转发内容")
                 with open(repost_text_dir, 'w') as f:
                     f.write(response.text)
             data = content['data']
@@ -177,7 +178,8 @@ class Myspider(scrapy.Spider):
         folder = os.path.exists(folder_dir)
         if not folder:
             os.makedirs(folder_dir)
-            print("创建文件夹：" + folder_dir)
+            msg = "创建文件夹:{}".format(folder_dir)
+            self.logger.info(msg)
 
     def parse_time(self, times):
         FORMAT = '%a %b %d %H:%M:%S +0800 %Y'

@@ -1,9 +1,9 @@
 import sqlite3
 from weibo_scrapy import settings
 
-SQLITE_DB = settings.SQLITE_DB
+SQLITE3_DB = settings.SQLITE3_DB
 
-cnx = sqlite3.connect(database=SQLITE_DB)
+cnx = sqlite3.connect(database=SQLITE3_DB)
 cur = cnx.cursor()
 
 

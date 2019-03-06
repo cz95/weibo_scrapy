@@ -6,7 +6,7 @@ import sqlite3
 import sys
 from weibo_scrapy import settings
 
-SQLITE_DB = settings.SQLITE_DB
+SQLITE3_DB = settings.SQLITE3_DB
 INT_TO_TYPE = settings.INT_TO_TYPE
 TYPE_TO_INT = settings.TYPE_TO_INT
 
@@ -44,7 +44,7 @@ class WeiboExcel(object):
                 '被转发微博id', '原微博内容', '原微博图片id', '原用户id', '原用户名', '原用户认证类型',
                 '原用户粉丝数']
         worksheet.write_row(0, 0, row0)
-        db = sqlite3.connect(SQLITE_DB)
+        db = sqlite3.connect(SQLITE3_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
         if search_type == -1:
             sql = "SELECT * From sina_blog WHERE user_name = '{}' ORDER BY `time` DESC".format(
@@ -85,7 +85,7 @@ class WeiboRepostExcel(object):
         worksheet = workbook.add_worksheet('weiboInfo')
         row0 = ['时间', '转发内容', '用户名', '用户粉丝', '用户id', '性别', '认证类型']
         worksheet.write_row(0, 0, row0)
-        db = sqlite3.connect(SQLITE_DB)
+        db = sqlite3.connect(SQLITE3_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
         sql = "SELECT * From sina_blog_repost WHERE weibo_name = '{}' ORDER BY `created_at` DESC".format(
             search_key)
@@ -115,7 +115,7 @@ class WeiboCommentExcel(object):
         worksheet = workbook.add_worksheet('weiboInfo')
         row0 = ['时间', '评论内容', '点赞数', '用户名', '认证类型', '用户id']
         worksheet.write_row(0, 0, row0)
-        db = sqlite3.connect(SQLITE_DB)
+        db = sqlite3.connect(SQLITE3_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
         sql = "SELECT * From sina_blog_comment WHERE weibo_name = '{}' ORDER BY `created_at` DESC".format(
             search_key)

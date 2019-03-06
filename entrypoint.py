@@ -1,8 +1,26 @@
+import sys
 from scrapy.cmdline import execute
+
+
+
+# 传入两个参数 {type} {line}  例如：python entrypoint.py weibo 1,重庆发布,1988438334,20,False@_@
+# type取值有：weibo | repost | comment
+if __name__ == '__main__':
+    cmd = ""
+    if sys.argv[1] == 'weibo':
+        cmd = "scrapy crawl weibo -a line=" + sys.argv[2]
+    elif sys.argv[1] == 'repost':
+        cmd = "scrapy crawl weibo_repost -a line=" + sys.argv[2]
+    elif sys.argv[1] == 'comment':
+        cmd = "scrapy crawl weibo_comment -a line=" + sys.argv[2]
+    execute(cmd.split())
+
+
+
 
 # 基于用户id搜索： 第一位：type = 1 第二位：用户名  第三位：用户id 第四位：页数 第五位：是否要图片
 # 例子：   1,重庆发布,1988438334,3,True
-execute(("scrapy crawl weibo -a line=1,重庆发布,1988438334,20,False@_@").split(" "))
+# execute(("scrapy crawl weibo -a line=1,重庆发布,1988438334,20,False@_@").split(" "))
 
 # 基于关键词搜索：  第一位：type = 2   第二位：关键词    第三位：1-综合 60-热门 61-实时  第四位：页数 第五位：是否要图片
 # 例子    2,天盛长歌,60,3,True

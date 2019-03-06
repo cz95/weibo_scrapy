@@ -5,7 +5,7 @@ import sqlite3
 import sys
 from weibo_scrapy import settings
 
-SQLITE_DB = settings.SQLITE_DB
+SQLITE3_DB = settings.SQLITE3_DB
 INT_TO_TYPE = settings.INT_TO_TYPE
 TYPE_TO_INT = settings.TYPE_TO_INT
 
@@ -15,7 +15,7 @@ jieba.analyse.set_stop_words('./lib/stop_words')
 def get_keys(search_key, search_type):
     int_type = TYPE_TO_INT[search_type]
     text = ""
-    db = sqlite3.connect(SQLITE_DB)
+    db = sqlite3.connect(SQLITE3_DB)
     cursor = db.cursor()  # 创建游标对象
 
     if int_type < 62:
@@ -46,8 +46,7 @@ def get_keys(search_key, search_type):
         print('%s %s' % (x, w))
 
 
-## 命令行 获取： python get_key.py get
-## 命令行 删除： python get_key.py del {key} {type}  例如 python get_key.py del 交通大学 用户抓取
+## 命令行 获取： python get_key.py get {key} {type}  例如 python get_key.py del 交通大学 用户抓取
 ## 命令行 删除： type取值有：用户抓取, 综合抓取, 热门抓取, 实时抓取, 微博转发, 微博评论
 if __name__ == '__main__':
     get_keys(sys.argv[1], sys.argv[2])

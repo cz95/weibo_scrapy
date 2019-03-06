@@ -5,7 +5,7 @@ import json
 import sys
 from weibo_scrapy import settings
 
-SQLITE_DB = settings.SQLITE_DB
+SQLITE3_DB = settings.SQLITE3_DB
 INT_TO_TYPE = settings.INT_TO_TYPE
 TYPE_TO_INT = settings.TYPE_TO_INT
 
@@ -15,7 +15,7 @@ class History(object):
     def get_history(self):
         res = {}
         res["weibo_num"] = 0
-        db = sqlite3.connect(SQLITE_DB)
+        db = sqlite3.connect(SQLITE3_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
         sql = "SELECT distinct search_key, search_type From sina_blog ORDER BY `search_key` DESC"
         cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
@@ -62,7 +62,7 @@ class History(object):
         return a
 
     def del_history(self, key, type):
-        db = sqlite3.connect(SQLITE_DB)
+        db = sqlite3.connect(SQLITE3_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
         int_type = TYPE_TO_INT[type]
         if (int_type < 62 ):
