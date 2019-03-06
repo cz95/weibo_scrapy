@@ -31,8 +31,8 @@ def match(x):
 
 class WeiboExcel(object):
 
-    def write_excel(self, search_key, search_type):
-        xlsx_name = search_key + "_" + search_type + '.xlsx'
+    def write_excel(self, search_type, search_key):
+        xlsx_name = search_type + "_" + search_key + '.xlsx'
         fold_dir = '../微博/汇总信息/'
         make_dir(fold_dir)
         xlsx_dir = os.path.join(fold_dir, xlsx_name)
@@ -133,17 +133,19 @@ class WeiboCommentExcel(object):
         db.close()
         workbook.close()
 
-## 命令行： python sql_to_excel.py {key} {type}
-## 命令行 删除： python history_record.py {key} {type}  例如 python history_record.py 交通大学 热门抓取
+
+
+## 命令行： python sql_to_excel.py {type} {key}
+## 命令行 删除： python history_record.py {type} {key}  例如 python history_record.py 热门抓取 交通大学
 ## 命令行 删除： type取值有：用户抓取, 综合抓取, 热门抓取, 实时抓取, 微博转发, 微博评论
 if __name__ == '__main__':
-    int_type = TYPE_TO_INT[sys.argv[2]]
+    int_type = TYPE_TO_INT[sys.argv[1]]
     if (int_type < 62):
         weibo = WeiboExcel()
         weibo.write_excel(sys.argv[1], sys.argv[2])
     elif (int_type == 100):
         weibo_repost = WeiboRepostExcel()
-        weibo_repost.write_excel(sys.argv[1])
+        weibo_repost.write_excel(sys.argv[2])
     else:
         weibo_comment = WeiboCommentExcel()
-        weibo_comment.write_excel(sys.argv[1])
+        weibo_comment.write_excel(sys.argv[2])
