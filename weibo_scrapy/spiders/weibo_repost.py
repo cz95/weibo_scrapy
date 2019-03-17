@@ -6,7 +6,7 @@ from weibo_scrapy.items import WeiboRepostScrapyItem
 import json
 
 
-class Myspider(scrapy.Spider):
+class RepostSpider(scrapy.Spider):
     name = 'weibo_repost'
 
     def __init__(self, line, *args, **kwargs):

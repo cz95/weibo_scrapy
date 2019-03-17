@@ -36,7 +36,7 @@ class History(object):
                 data[0])
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
             count = cursor.fetchall()
-            temp = {"key": data[0], "type": "微博转发", "count": count[0][0]}
+            temp = {"key": data[0], "type": "100", "count": count[0][0]}
             res["repost"].append(temp)
 
         sql = "SELECT distinct weibo_name From sina_blog_comment ORDER BY `weibo_name` DESC"
@@ -47,7 +47,7 @@ class History(object):
                 data[0])
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
             count = cursor.fetchall()
-            temp = {"key": data[0], "type": "微博评论", "count": count[0][0]}
+            temp = {"key": data[0], "type": "101", "count": count[0][0]}
             res["comment"].append(temp)
 
         cursor.close()

@@ -8,7 +8,7 @@ import json
 
 
 
-class Myspider(scrapy.Spider):
+class WeiboSpider(scrapy.Spider):
     name = 'weibo'
 
     def __init__(self, line, *args, **kwargs):

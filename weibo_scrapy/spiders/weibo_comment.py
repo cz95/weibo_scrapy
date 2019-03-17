@@ -7,7 +7,7 @@ import json
 import re
 
 
-class Myspider(scrapy.Spider):
+class CommentSpider(scrapy.Spider):
     name = 'weibo_comment'
 
     def __init__(self, line, *args, **kwargs):
