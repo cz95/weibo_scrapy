@@ -36,9 +36,11 @@ class Myspider(scrapy.Spider):
                     0]) == "True"
             elif spider_type == 2:  # 2 基于关键词爬取
                 search_type = line.split(',')[2]
+                "https://m.weibo.cn/api/container/getIndex?containerid=100103type=61&q=广发银行信用卡&t=0&page_type=searchall&page=9"
+                ""
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D" + \
                             line.split(',')[
-                                2] + "%26q%3D" + search_key + "&page_type=searchall"
+                                2] + "%26q%3D" + search_key + "%26t%3D0&page_type=searchall"
                 max_range = int(line.split(',')[3])
                 download_pic = (line.split(',')[4].rsplit('\n')[
                     0]) == "True"

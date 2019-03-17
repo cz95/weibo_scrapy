@@ -134,10 +134,41 @@ class WeiboCommentExcel(object):
         workbook.close()
 
 
+class WechatPublicExcel(object):
+
+    def write_excel(self, name):
+        xlsx_name = name + '_微信.xlsx'
+        fold_dir = '../微博/汇总信息/'
+        make_dir(fold_dir)
+        xlsx_dir = os.path.join(fold_dir, xlsx_name)
+        workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
+        worksheet = workbook.add_worksheet('weiboInfo')
+        row0 = ['文章摘要', '关键词', '作者', '音乐链接', '发布位置', '更新时间', '公众号类别', '图文标题',
+                '文章链接', '内容', '点赞数', '原文链接', '音频链接', '发布时间', '阅读数', '图片信息',
+                '公众号名称', '微信号']
+        worksheet.write_row(0, 0, row0)
+        db = sqlite3.connect(SQLITE3_DB)
+        cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
+        sql = "SELECT * From wechat_public WHERE name = '{}' ORDER BY `public_time` DESC".format(
+            name)
+        cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
+        datas = cursor.fetchall()  # 使用 fetchone() 方法获取单条数据.
+        row_num = 1
+        points = [0]
+        for data in datas:
+            for index in range(0, len(row0) + 1):
+                if index in points:
+                    continue
+                worksheet.write(row_num, index - 1, data[index])
+            row_num = row_num + 1
+        cursor.close()
+        db.close()
+        workbook.close()
+
 
 ## 命令行： python sql_to_excel.py {type} {key}
-## 命令行 删除： python history_record.py {type} {key}  例如 python history_record.py 热门抓取 交通大学
-## 命令行 删除： type取值有：用户抓取, 综合抓取, 热门抓取, 实时抓取, 微博转发, 微博评论
+## 命令行： python sql_to_excel.py {type} {key}  例如 python sql_to_excel.py 热门抓取 交通大学
+## 命令行： type取值有：用户抓取, 综合抓取, 热门抓取, 实时抓取, 微博转发, 微博评论, 微信
 if __name__ == '__main__':
     int_type = TYPE_TO_INT[sys.argv[1]]
     if (int_type < 62):
@@ -146,6 +177,9 @@ if __name__ == '__main__':
     elif (int_type == 100):
         weibo_repost = WeiboRepostExcel()
         weibo_repost.write_excel(sys.argv[2])
-    else:
+    elif (int_type == 101):
         weibo_comment = WeiboCommentExcel()
+        weibo_comment.write_excel(sys.argv[2])
+    elif (int_type == 200):
+        weibo_comment = WechatPublicExcel()
         weibo_comment.write_excel(sys.argv[2])

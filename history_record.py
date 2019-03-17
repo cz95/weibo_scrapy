@@ -14,7 +14,9 @@ class History(object):
 
     def get_history(self):
         res = {}
-        res["weibo_num"] = 0
+        res["data"] = []
+        res["repost"] = []
+        res["comment"] = []
         db = sqlite3.connect(SQLITE3_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
         sql = "SELECT distinct search_key, search_type From sina_blog ORDER BY `search_key` DESC"
@@ -27,10 +29,8 @@ class History(object):
             count = cursor.fetchall()
             temp = {"key": data[0], "type": INT_TO_TYPE[int(data[1])],
                     "count": count[0][0]}
-            res["data_" + str(res["weibo_num"])] = temp
-            res["weibo_num"] += 1
+            res["data"].append(temp)
 
-        res["repost_num"] = 0
         sql = "SELECT distinct weibo_name From sina_blog_repost ORDER BY `weibo_name` DESC"
         cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
         datas = cursor.fetchall()
@@ -40,10 +40,8 @@ class History(object):
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
             count = cursor.fetchall()
             temp = {"key": data[0], "type": "微博转发", "count": count[0][0]}
-            res["repost_" + str(res["repost_num"])] = temp
-            res["repost_num"] += 1
+            res["repost"].append(temp)
 
-        res["comment_num"] = 0
         sql = "SELECT distinct weibo_name From sina_blog_comment ORDER BY `weibo_name` DESC"
         cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
         datas = cursor.fetchall()
@@ -53,8 +51,7 @@ class History(object):
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
             count = cursor.fetchall()
             temp = {"key": data[0], "type": "微博评论", "count": count[0][0]}
-            res["comment_" + str(res["comment_num"])] = temp
-            res["comment_num"] += 1
+            res["comment"].append(temp)
 
         cursor.close()
         db.close()
