@@ -55,7 +55,7 @@ class History(object):
         a = json.dumps(res)
         return a
 
-    def del_history(self, key, type):
+    def del_history(self, type, key):
         db = sqlite3.connect(SQLITE3_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
         int_type = int(type)
@@ -80,7 +80,7 @@ class History(object):
 
 
 ## 命令行 获取： python history_record.py get
-## 命令行 删除： python history_record.py del {key} {type}  例如 python history_record.py del 交通大学 用户抓取
+## 命令行 删除： python history_record.py del {type}  {key}  例如 python history_record.py del 1 交通大学
 ## 命令行： type取值有: {"用户抓取": -1, "综合抓取": 1, "热门抓取": 60, "实时抓取": 61, "微博转发": 100, "微博评论": 101, "微信": 200}
 if __name__ == '__main__':
     h = History()
