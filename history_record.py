@@ -26,7 +26,7 @@ class History(object):
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
             count = cursor.fetchall()
             temp = {"key": data[0], "type": data[1], "count": count[0][0]}
-            res["data"].append(temp)
+            res["weibo"].append(temp)
 
         sql = "SELECT distinct weibo_name From sina_blog_repost ORDER BY `weibo_name` DESC"
         cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
