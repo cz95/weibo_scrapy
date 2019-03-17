@@ -6,8 +6,6 @@ import sys
 from weibo_scrapy import settings
 
 SQLITE3_DB = settings.SQLITE3_DB
-INT_TO_TYPE = settings.INT_TO_TYPE
-TYPE_TO_INT = settings.TYPE_TO_INT
 
 
 class History(object):
@@ -27,8 +25,7 @@ class History(object):
                 data[0], data[1])
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
             count = cursor.fetchall()
-            temp = {"key": data[0], "type": INT_TO_TYPE[int(data[1])],
-                    "count": count[0][0]}
+            temp = {"key": data[0], "type": data[1], "count": count[0][0]}
             res["data"].append(temp)
 
         sql = "SELECT distinct weibo_name From sina_blog_repost ORDER BY `weibo_name` DESC"
@@ -61,13 +58,16 @@ class History(object):
     def del_history(self, key, type):
         db = sqlite3.connect(SQLITE3_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
-        int_type = TYPE_TO_INT[type]
-        if (int_type < 62 ):
-            sql = "DELETE From sina_blog WHERE search_key = '{}' AND search_type = '{}'".format(key, int_type)
+        int_type = int(type)
+        if (int_type < 62):
+            sql = "DELETE From sina_blog WHERE search_key = '{}' AND search_type = '{}'".format(
+                key, int_type)
         elif (int_type == 100):
-            sql = "DELETE From sina_blog_repost WHERE weibo_name = '{}'".format(key)
+            sql = "DELETE From sina_blog_repost WHERE weibo_name = '{}'".format(
+                key)
         else:
-            sql = "DELETE From sina_blog_comment WHERE weibo_name = '{}'".format(key)
+            sql = "DELETE From sina_blog_comment WHERE weibo_name = '{}'".format(
+                key)
 
         try:
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
@@ -78,9 +78,10 @@ class History(object):
         cursor.close()
         db.close()
 
+
 ## 命令行 获取： python history_record.py get
 ## 命令行 删除： python history_record.py del {key} {type}  例如 python history_record.py del 交通大学 用户抓取
-## 命令行 删除： type取值有：用户抓取, 综合抓取, 热门抓取, 实时抓取, 微博转发, 微博评论
+## 命令行： type取值有: {"用户抓取": -1, "综合抓取": 1, "热门抓取": 60, "实时抓取": 61, "微博转发": 100, "微博评论": 101, "微信": 200}
 if __name__ == '__main__':
     h = History()
     if sys.argv[1] == 'get':

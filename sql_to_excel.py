@@ -7,8 +7,6 @@ import sys
 from weibo_scrapy import settings
 
 SQLITE3_DB = settings.SQLITE3_DB
-INT_TO_TYPE = settings.INT_TO_TYPE
-TYPE_TO_INT = settings.TYPE_TO_INT
 
 
 def make_dir(folder_dir):
@@ -52,7 +50,7 @@ class WeiboExcel(object):
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
         else:
             sql = "SELECT * From sina_blog WHERE search_type = '{}' AND search_key = '{}' ORDER BY `time` DESC".format(
-                TYPE_TO_INT[search_type], search_key)
+                search_type, search_key)
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
         datas = cursor.fetchall()  # 使用 fetchone() 方法获取单条数据.
         row_num = 1
@@ -167,10 +165,10 @@ class WechatPublicExcel(object):
 
 
 ## 命令行： python sql_to_excel.py {type} {key}
-## 命令行： python sql_to_excel.py {type} {key}  例如 python sql_to_excel.py 热门抓取 交通大学
-## 命令行： type取值有：用户抓取, 综合抓取, 热门抓取, 实时抓取, 微博转发, 微博评论, 微信
+## 命令行： python sql_to_excel.py {type} {key}  例如 python sql_to_excel.py 60 交通大学
+## 命令行： type取值有: {"用户抓取": -1, "综合抓取": 1, "热门抓取": 60, "实时抓取": 61, "微博转发": 100, "微博评论": 101, "微信": 200}
 if __name__ == '__main__':
-    int_type = TYPE_TO_INT[sys.argv[1]]
+    int_type = int(sys.argv[1])
     if (int_type < 62):
         weibo = WeiboExcel()
         weibo.write_excel(sys.argv[1], sys.argv[2])
