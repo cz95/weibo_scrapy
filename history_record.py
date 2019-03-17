@@ -12,7 +12,7 @@ class History(object):
 
     def get_history(self):
         res = {}
-        res["data"] = []
+        res["weibo"] = []
         res["repost"] = []
         res["comment"] = []
         db = sqlite3.connect(SQLITE3_DB)
