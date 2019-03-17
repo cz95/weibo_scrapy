@@ -7,6 +7,7 @@ import sys
 from weibo_scrapy import settings
 
 SQLITE3_DB = settings.SQLITE3_DB
+FOLD_DIR = '../微博/汇总信息/'
 
 
 def make_dir(folder_dir):
@@ -31,7 +32,7 @@ class WeiboExcel(object):
 
     def write_excel(self, search_type, search_key):
         xlsx_name = search_type + "_" + search_key + '.xlsx'
-        fold_dir = '../微博/汇总信息/'
+        fold_dir = FOLD_DIR
         make_dir(fold_dir)
         xlsx_dir = os.path.join(fold_dir, xlsx_name)
         workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
@@ -76,7 +77,7 @@ class WeiboRepostExcel(object):
 
     def write_excel(self, search_key):
         xlsx_name = search_key + '_转发.xlsx'
-        fold_dir = '../微博/汇总信息/'
+        fold_dir = FOLD_DIR
         make_dir(fold_dir)
         xlsx_dir = os.path.join(fold_dir, xlsx_name)
         workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
@@ -106,7 +107,7 @@ class WeiboCommentExcel(object):
 
     def write_excel(self, search_key):
         xlsx_name = search_key + '_评论.xlsx'
-        fold_dir = '../微博/汇总信息/'
+        fold_dir = FOLD_DIR
         make_dir(fold_dir)
         xlsx_dir = os.path.join(fold_dir, xlsx_name)
         workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
@@ -136,7 +137,7 @@ class WechatPublicExcel(object):
 
     def write_excel(self, name):
         xlsx_name = name + '_微信.xlsx'
-        fold_dir = '../微博/汇总信息/'
+        fold_dir = FOLD_DIR
         make_dir(fold_dir)
         xlsx_dir = os.path.join(fold_dir, xlsx_name)
         workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
