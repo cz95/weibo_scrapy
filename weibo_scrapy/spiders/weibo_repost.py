@@ -4,7 +4,8 @@ import scrapy
 from scrapy.http import Request
 from weibo_scrapy.items import WeiboRepostScrapyItem
 import json
-
+import time
+import re
 
 class RepostSpider(scrapy.Spider):
     name = 'weibo_repost'
@@ -34,7 +35,7 @@ class RepostSpider(scrapy.Spider):
             for data in data_list:
                 item = WeiboRepostScrapyItem()
                 item['repost_id'] = data['id']
-                item['created_at'] = data['created_at']
+                item['created_at'] = self.parse_time(data['created_at'])
                 item['raw_text'] = data['raw_text']
                 user = data['user']
                 item['user_name'] = user['screen_name']
@@ -47,3 +48,23 @@ class RepostSpider(scrapy.Spider):
                 item['weibo_name'] = response.meta['weibo_name']
                 item['download_pic'] = False
                 yield item
+
+
+    def parse_time(self, created_at):
+        if "分钟前" in created_at:
+            matchObj = re.match(r'(.*)分钟前', created_at, re.M | re.I)
+            return time.strftime("%Y-%m-%d", time.localtime(time.time() - int(matchObj[1])*60))
+        if "小时前" in created_at:
+            matchObj = re.match(r'(.*)小时前', created_at, re.M | re.I)
+            return time.strftime("%Y-%m-%d", time.localtime(time.time() -int(matchObj[1])*3600))
+        s = created_at.split(" ")
+        if "今天" in created_at:
+            y = time.strftime("%Y-%m-%d", time.localtime(time.time()))
+            return y
+        if "昨天" in created_at:
+            y = time.strftime("%Y-%m-%d", time.localtime(time.time() - 86400))
+            return y
+        if len(s[0].split("-")) == 2:
+            y = time.strftime("%Y-", time.localtime())
+            return y+s[0]
+        return s[0]

@@ -5,6 +5,7 @@ from scrapy.http import Request
 from weibo_scrapy.items import WeiboCommentScrapyItem
 import json
 import re
+import time
 
 
 class CommentSpider(scrapy.Spider):
@@ -37,7 +38,7 @@ class CommentSpider(scrapy.Spider):
             for data in data_list:
                 item = WeiboCommentScrapyItem()
                 item['comment_id'] = data['id']
-                item['created_at'] = data['created_at']
+                item['created_at'] = self.parse_time(data['created_at'])
                 item['text'] = re.sub('<.*?>|回复<.*?>:|[\U00010000-\U0010ffff]|[\uD800-\uDBFF][\uDC00-\uDFFF]', '', data['text'])
                 item['like_counts'] = data['like_counts']
                 user = data['user']
@@ -48,3 +49,22 @@ class CommentSpider(scrapy.Spider):
                 item['weibo_name'] = response.meta['weibo_name']
                 item['download_pic'] = False
                 yield item
+
+    def parse_time(self, created_at):
+        if "分钟前" in created_at:
+            matchObj = re.match(r'(.*)分钟前', created_at, re.M | re.I)
+            return time.strftime("%Y-%m-%d", time.localtime(time.time() - int(matchObj[1])*60))
+        if "小时前" in created_at:
+            matchObj = re.match(r'(.*)小时前', created_at, re.M | re.I)
+            return time.strftime("%Y-%m-%d", time.localtime(time.time() -int(matchObj[1])*3600))
+        s = created_at.split(" ")
+        if "今天" in created_at:
+            y = time.strftime("%Y-%m-%d", time.localtime(time.time()))
+            return y
+        if "昨天" in created_at:
+            y = time.strftime("%Y-%m-%d", time.localtime(time.time() - 86400))
+            return y
+        if len(s[0].split("-")) == 2:
+            y = time.strftime("%Y-", time.localtime())
+            return y+s[0]
+        return s[0]

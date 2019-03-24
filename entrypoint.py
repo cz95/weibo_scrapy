@@ -1,6 +1,5 @@
-#!/usr/bin/Python
-# -*- coding: utf-8 -*-
 import sys
+from scrapy.cmdline import execute
 
 import scrapy.spiderloader
 import scrapy.statscollectors
@@ -56,31 +55,19 @@ import scrapy.core.downloader.contextfactory
 
 import scrapy.pipelines.images  # 用到图片管道
 
-from scrapy.crawler import CrawlerRunner
-from twisted.internet import reactor
-from scrapy.utils.project import get_project_settings
-from weibo_scrapy.spiders.weibo import WeiboSpider
-from weibo_scrapy.spiders.weibo_comment import CommentSpider
-from weibo_scrapy.spiders.weibo_repost import RepostSpider
-from scrapy.utils.log import configure_logging
 
-# 传入两个参数 {type} {line}  例如：python crawler_run.py weibo 1,重庆发布,1988438334,20,False@_@
+# 传入两个参数 {type} {line}  例如：python entrypoint.py weibo 1,重庆发布,1988438334,20,False@_@
 # type取值有：weibo | repost | comment
 if __name__ == '__main__':
-    configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
-    runner = CrawlerRunner(get_project_settings())
-
+    cmd = ""
     if sys.argv[1] == 'weibo':
-        d = runner.crawl(WeiboSpider, sys.argv[2])
-        d.addBoth(lambda _: reactor.stop())
+        cmd = "scrapy crawl weibo -a line=" + sys.argv[2]
     elif sys.argv[1] == 'repost':
-        d = runner.crawl(RepostSpider, sys.argv[2])
-        d.addBoth(lambda _: reactor.stop())
+        cmd = "scrapy crawl weibo_repost -a line=" + sys.argv[2]
     elif sys.argv[1] == 'comment':
-        d = runner.crawl(CommentSpider, sys.argv[2])
-        d.addBoth(lambda _: reactor.stop())
+        cmd = "scrapy crawl weibo_comment -a line=" + sys.argv[2]
+    execute(cmd.split())
 
-    reactor.run()
 
 # 基于用户id搜索： 第一位：type = 1 第二位：用户名  第三位：用户id 第四位：页数 第五位：是否要图片
 # 例子：   1,重庆发布,1988438334,3,True
@@ -95,3 +82,5 @@ if __name__ == '__main__':
 
 # 爬取当前微博评论信息 第一位：项目名（一般微博名+日期） 第二位：微博id  第三位：评论页码（一页一般十条信息）
 # execute(("scrapy crawl weibo_comment -a line=央视新闻_190218,4341018118015865,20@_@").split(" "))
+
+#

@@ -61,7 +61,7 @@ class CommentSql:
                     user_id, verified_type, weibo_id, weibo_name):
         sql = 'INSERT INTO sina_blog_comment VALUES (?,?,?,?,?,?,?,?,?)'
         value = (id, created_at, text, like_counts, user_name,
-                 user_id, verified_type, weibo_id, weibo_name)
+                 verified_type,user_id, weibo_id, weibo_name)
         cur.execute(sql, value)
         cnx.commit()
 
