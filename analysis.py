@@ -46,10 +46,16 @@ def weibo_ana(search_type, search_key):
 	for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=20):
 		get_key[x] = w
 	result = {}
+	# 微博数  直接显示
 	result["weibo_num"] = weibo_num
+	# 认证类型，-1-普通用户；0-名人；1-政府；2-企业；3-媒体；4- 校园；5-网站；6-应用：7-团体 （机构） 8待审企业,200初级达人,220中高级达人,400已故V用户。
+	# （饼状图）
 	result["verify_type"] = verify_type
+	# 粉丝数，直接显示
 	result["followers"] = followers
+	# 关键词，{关键词：打分} 词云显示
 	result["key"] = get_key
+	# 时间轴，每个时间点发的评论数，折线图
 	result["timeline"] = time_line
 	print(result)
 
@@ -86,11 +92,17 @@ def repost_ana(search_key):
 	for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=20):
 		get_key[x] = w
 	result = {}
+	# 转发数，直接显示
 	result["repost_num"] = repost_num
+	# 认证类型，-1-普通用户；0-名人；1-政府；2-企业；3-媒体；4- 校园；5-网站；6-应用：7-团体 （机构） 8待审企业,200初级达人,220中高级达人,400已故V用户。
+	# （饼状图）
 	result["verify_type"] = verify_type
+	# 粉丝数，直接显示
 	result["followers_count"] = followers_count
 	result["key"] = get_key
+	# 性别，饼状图
 	result['gender'] = gender
+	# 时间轴，每个时间点发的评论数，折线图
 	result["timeline"] = time_line
 	print(result)
 
@@ -123,10 +135,16 @@ def comment_ana(search_key):
 	for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=20):
 		get_key[x] = w
 	result = {}
+	# 评论数  （直接显示即可，弄的大一点）
 	result["comment_num"] = comment_num
+	# 认证类型，-1-普通用户；0-名人；1-政府；2-企业；3-媒体；4- 校园；5-网站；6-应用：7-团体 （机构） 8待审企业,200初级达人,220中高级达人,400已故V用户。
+	# （饼状图）
 	result["verify_type"] = verify_type
+	# 总体点赞数，直接显示
 	result["like_counts"] = like_counts
+	# 关键词，{关键词：打分} 词云显示
 	result["key"] = get_key
+	# 时间轴，每个时间点发的评论数，折线图
 	result["time_line"] = time_line
 	print(result)
 
