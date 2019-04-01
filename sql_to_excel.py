@@ -31,11 +31,11 @@ def match(x):
 
 class WeiboExcel(object):
 
-	def write_excel(self, search_type, search_key):
-		xlsx_name = search_key + "_" + INT_TO_TYPE[int(search_type)] + '.xlsx'
-		fold_dir = FOLD_DIR
-		make_dir(fold_dir)
-		xlsx_dir = os.path.join(fold_dir, xlsx_name)
+	def write_excel(self, search_type, search_key, xlsx_dir):
+		# xlsx_name = search_key + "_" + INT_TO_TYPE[int(search_type)] + '.xlsx'
+		# fold_dir = FOLD_DIR
+		# make_dir(fold_dir)
+		# xlsx_dir = os.path.join(fold_dir, xlsx_name)
 		workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
 		worksheet = workbook.add_worksheet('weiboInfo')
 		row0 = ['用户id', '用户名', '用户认证类型', '用户粉丝数', '时间', '微博id', '内容', '内容长度',
@@ -75,11 +75,11 @@ class WeiboExcel(object):
 
 class WeiboRepostExcel(object):
 
-	def write_excel(self, search_key):
-		xlsx_name = search_key + '_转发.xlsx'
-		fold_dir = FOLD_DIR
-		make_dir(fold_dir)
-		xlsx_dir = os.path.join(fold_dir, xlsx_name)
+	def write_excel(self, search_key, xlsx_dir):
+		# xlsx_name = search_key + '_转发.xlsx'
+		# fold_dir = FOLD_DIR
+		# make_dir(fold_dir)
+		# xlsx_dir = os.path.join(fold_dir, xlsx_name)
 		workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
 		worksheet = workbook.add_worksheet('weiboInfo')
 		row0 = ['时间', '转发内容', '用户名', '用户粉丝', '用户id', '性别', '认证类型']
@@ -105,11 +105,11 @@ class WeiboRepostExcel(object):
 
 class WeiboCommentExcel(object):
 
-	def write_excel(self, search_key):
-		xlsx_name = search_key + '_评论.xlsx'
-		fold_dir = FOLD_DIR
-		make_dir(fold_dir)
-		xlsx_dir = os.path.join(fold_dir, xlsx_name)
+	def write_excel(self, search_key, xlsx_dir):
+		# xlsx_name = search_key + '_评论.xlsx'
+		# fold_dir = FOLD_DIR
+		# make_dir(fold_dir)
+		# xlsx_dir = os.path.join(fold_dir, xlsx_name)
 		workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
 		worksheet = workbook.add_worksheet('weiboInfo')
 		row0 = ['时间', '评论内容', '点赞数', '用户名', '认证类型', '用户id']
@@ -135,11 +135,11 @@ class WeiboCommentExcel(object):
 
 class WechatPublicExcel(object):
 
-	def write_excel(self, name):
-		xlsx_name = name + '_微信.xlsx'
-		fold_dir = FOLD_DIR
-		make_dir(fold_dir)
-		xlsx_dir = os.path.join(fold_dir, xlsx_name)
+	def write_excel(self, name, xlsx_dir):
+		# xlsx_name = name + '_微信.xlsx'
+		# fold_dir = FOLD_DIR
+		# make_dir(fold_dir)
+		# xlsx_dir = os.path.join(fold_dir, xlsx_name)
 		workbook = xlsxwriter.Workbook(xlsx_dir, {'strings_to_urls': False})
 		worksheet = workbook.add_worksheet('weiboInfo')
 		row0 = ['公众号名称', '微信号', '公众号类别', '作者', '发布位置', '图文中头图链接', '原文链接',
@@ -163,21 +163,21 @@ class WechatPublicExcel(object):
 
 
 ## 命令行： python sql_to_excel.py {type} {key}
-## 命令行： python sql_to_excel.py {type} {key}  例如 python sql_to_excel.py 60 交通大学
+## 命令行： python sql_to_excel.py {type} {key}  例如 python sql_to_excel.py 60 交通大学 /Users/admin/Desktop/交通大学_热门抓取.xlsx
 ## 命令行： type取值有: {"用户抓取": -1, "综合抓取": 1, "热门抓取": 60, "实时抓取": 61, "微博转发": 100, "微博评论": 101, "微信": 200}
 if __name__ == '__main__':
 	int_type = int(sys.argv[1])
-	if len(sys.argv) > 3:
-		FOLD_DIR = sys.argv[3]
+	# if len(sys.argv) > 3:
+	# 	FOLD_DIR = sys.argv[3]
 	if (int_type < 62):
 		weibo = WeiboExcel()
-		weibo.write_excel(sys.argv[1], sys.argv[2])
+		weibo.write_excel(sys.argv[1], sys.argv[2], sys.argv[3])
 	elif (int_type == 100):
 		weibo_repost = WeiboRepostExcel()
-		weibo_repost.write_excel(sys.argv[2])
+		weibo_repost.write_excel(sys.argv[2], sys.argv[3])
 	elif (int_type == 101):
 		weibo_comment = WeiboCommentExcel()
-		weibo_comment.write_excel(sys.argv[2])
+		weibo_comment.write_excel(sys.argv[2], sys.argv[3])
 	elif (int_type == 200):
 		weibo_comment = WechatPublicExcel()
-		weibo_comment.write_excel(sys.argv[2])
+		weibo_comment.write_excel(sys.argv[2], sys.argv[3])
