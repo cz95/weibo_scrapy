@@ -7,6 +7,7 @@ import sys
 from weibo_scrapy import settings
 
 SQLITE3_DB = settings.SQLITE3_DB
+INT_TO_TYPE = settings.INT_TO_TYPE
 FOLD_DIR = '../微博/汇总信息/'
 
 
@@ -31,7 +32,7 @@ def match(x):
 class WeiboExcel(object):
 
 	def write_excel(self, search_type, search_key):
-		xlsx_name = search_type + "_" + search_key + '.xlsx'
+		xlsx_name = search_key + "_" + INT_TO_TYPE[int(search_type)] + '.xlsx'
 		fold_dir = FOLD_DIR
 		make_dir(fold_dir)
 		xlsx_dir = os.path.join(fold_dir, xlsx_name)

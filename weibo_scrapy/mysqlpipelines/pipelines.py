@@ -19,7 +19,7 @@ class WeiboImagePipeline(ImagesPipeline):
                 url = 'http://wx1.sinaimg.cn/large/' + image_id + '.jpg'
                 i = i + 1
                 pic_name = self.format_time(item['time']) + str(i) + '.jpg'
-                msg = "#下载图片成功  图片名为：".format(pic_name)
+                msg = "#下载图片成功  图片名为：{}".format(pic_name)
                 self.img_log.info(msg)
                 yield scrapy.Request(url, headers=DEFAULT_REQUEST_HEADERS,
                                      meta={'user_name': item['user_name'],
@@ -28,7 +28,7 @@ class WeiboImagePipeline(ImagesPipeline):
                 url = 'http://wx1.sinaimg.cn/large/' + image_id + '.jpg'
                 i = i + 1
                 pic_name = self.format_time(item['time']) + str(i) + '.jpg'
-                msg = "#下载图片成功  图片名为：".format(pic_name)
+                msg = "#下载图片成功  图片名为：{}".format(pic_name)
                 self.img_log.info(msg)
                 yield scrapy.Request(url, headers=DEFAULT_REQUEST_HEADERS,
                                      meta={'user_name': item['user_name'],
