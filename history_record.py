@@ -15,6 +15,7 @@ class History(object):
         res["weibo"] = []
         res["repost"] = []
         res["comment"] = []
+        res["wechat"] = []
         db = sqlite3.connect(SQLITE3_DB)
         cursor = db.cursor()  # 使用 cursor() 方法创建一个游标对象 cursor
         sql = "SELECT distinct search_key, search_type From sina_blog ORDER BY `search_key` DESC"
@@ -50,6 +51,17 @@ class History(object):
             temp = {"key": data[0], "type": "101", "count": count[0][0]}
             res["comment"].append(temp)
 
+        sql = "SELECT distinct `name` From wechat_public ORDER BY `name` DESC"
+        cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
+        datas = cursor.fetchall()
+        for data in datas:
+            sql = "SELECT COUNT(*) FROM wechat_public WHERE `name` = '{}'".format(
+                data[0])
+            cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询
+            count = cursor.fetchall()
+            temp = {"key": data[0], "type": "200", "count": count[0][0]}
+            res["wechat"].append(temp)
+
         cursor.close()
         db.close()
         a = json.dumps(res)
@@ -65,9 +77,11 @@ class History(object):
         elif (int_type == 100):
             sql = "DELETE From sina_blog_repost WHERE weibo_name = '{}'".format(
                 key)
-        else:
+        elif (int_type == 101):
             sql = "DELETE From sina_blog_comment WHERE weibo_name = '{}'".format(
                 key)
+        elif (int_type == 200):
+            sql = "DELETE From wechat_public WHERE `name` = '{}'".format(key)
 
         try:
             cursor.execute(sql)  # 使用 execute()  方法执行 SQL 查询

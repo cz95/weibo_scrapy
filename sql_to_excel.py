@@ -170,7 +170,6 @@ class WechatPublicExcel(object):
 ## 命令行： type取值有: {"用户抓取": -1, "综合抓取": 1, "热门抓取": 60, "实时抓取": 61, "微博转发": 100, "微博评论": 101, "微信": 200}
 if __name__ == '__main__':
     int_type = int(sys.argv[1])
-    print(len(sys.argv))
     if len(sys.argv) > 3:
         FOLD_DIR = sys.argv[3]
     if (int_type < 62):
