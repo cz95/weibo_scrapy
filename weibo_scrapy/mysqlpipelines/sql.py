@@ -14,8 +14,8 @@ class WeiboSql:
                     reposts, comments, attitudes, is_long_text, is_reposts,
                     reposts_time, reposts_id, reposts_text, reposts_pic_id,
                     reposts_user_id, reposts_user_name, reposts_verified_type,
-                    reposts_user_followers, scrapy_type, search_key):
-        if scrapy_type == 1:
+                    reposts_user_followers, search_type, search_key):
+        if search_type == 1:
             sql = 'INSERT INTO sina_blog VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
         else:
             sql = 'INSERT INTO sina_blog VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
@@ -24,15 +24,15 @@ class WeiboSql:
             text, text_len, source, pic_id, vedio_url, reposts, comments,
             attitudes, is_long_text, is_reposts, reposts_time, reposts_id,
             reposts_text, reposts_pic_id, reposts_user_id, reposts_user_name,
-            reposts_verified_type, reposts_user_followers, scrapy_type,
+            reposts_verified_type, reposts_user_followers, search_type,
             search_key)
         cur.execute(sql, value)
         cnx.commit()
 
     @classmethod
-    def selet_blog_id(cls, id):
-        sql = 'SELECT EXISTS ( SELECT 1 FROM sina_blog WHERE weibo_id = ?)'
-        value = (id,)
+    def selet_blog_id(cls, id, search_type, search_key):
+        sql = 'SELECT EXISTS ( SELECT 1 FROM sina_blog WHERE weibo_id = ? AND search_type = ? AND search_key = ?)'
+        value = (id, search_type, search_key)
         cur.execute(sql, value)
         return cur.fetchall()[0]
 

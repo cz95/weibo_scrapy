@@ -53,18 +53,18 @@ class CommentSpider(scrapy.Spider):
     def parse_time(self, created_at):
         if "分钟前" in created_at:
             matchObj = re.match(r'(.*)分钟前', created_at, re.M | re.I)
-            return time.strftime("%Y-%m-%d", time.localtime(time.time() - int(matchObj[1])*60))
+            return time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time() - int(matchObj[1])*60))
         if "小时前" in created_at:
             matchObj = re.match(r'(.*)小时前', created_at, re.M | re.I)
-            return time.strftime("%Y-%m-%d", time.localtime(time.time() -int(matchObj[1])*3600))
+            return time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time() -int(matchObj[1])*3600))
         s = created_at.split(" ")
         if "今天" in created_at:
-            y = time.strftime("%Y-%m-%d", time.localtime(time.time()))
+            y = time.strftime("%Y-%m-%d ", time.localtime(time.time())) + s[1]
             return y
         if "昨天" in created_at:
-            y = time.strftime("%Y-%m-%d", time.localtime(time.time() - 86400))
+            y = time.strftime("%Y-%m-%d ", time.localtime(time.time() - 86400)) + s[1]
             return y
         if len(s[0].split("-")) == 2:
             y = time.strftime("%Y-", time.localtime())
-            return y+s[0]
-        return s[0]
+            return y + s[0] + " 00:00"
+        return created_at

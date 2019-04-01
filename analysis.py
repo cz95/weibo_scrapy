@@ -14,8 +14,8 @@ jieba.analyse.set_stop_words('./lib/stop_words')
 
 def parse_time_weibo(time_str):
     total = time_str.split(" ")
-    head = total[0].split("-")
-    return head[0] + "-" + head[1] + "-" + head[2]
+    tail = total[1].split(":")
+    return total[0] + " " + tail[0] + ":" + tail[1]
 
 
 def weibo_ana(search_type, search_key):
@@ -136,7 +136,7 @@ def comment_ana(search_key):
     cursor.close()
     db.close()
     get_key = {}
-    for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=20):
+    for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=40):
         get_key[x] = w
     result = {}
     # 评论数  （直接显示即可，弄的大一点）

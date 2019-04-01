@@ -59,7 +59,7 @@ class WeiboPipeline(object):
             search_key = item['search_key']
             if isinstance(item, WeiboScrapyItem):
                 weibo_id = item['weibo_id']
-                ret = WeiboSql.selet_blog_id(weibo_id)
+                ret = WeiboSql.selet_blog_id(weibo_id, search_type, search_key)
                 if ret[0] == 1:
                     time = item['time']  # 时间
                     user_name = item['user_name']  # 用户姓名
