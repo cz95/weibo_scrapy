@@ -93,7 +93,8 @@ class Wechat(object):
 		return str[:-1]
 
 
-# python wechat_public.py icbccards,2018-01-01,2019-01-01,f36092e5fc9940d78e039514b@_@
+# 关键字： 微信号，开始日期，结束日期，步长（一次最多抓取50条微博数，用户可以根据公众号每天发微博的数目进行调整），key。 支持多账号一起爬
+# python wechat_public.py icbccards,2018-01-01,2019-01-01,5,f36092e5fc9940d78e039514b@_@
 if __name__ == '__main__':
 	wechat = Wechat()
 	line_list = sys.argv[1].split('@_@')
@@ -105,10 +106,10 @@ if __name__ == '__main__':
 		e = l[2].split('-')
 		begin = datetime.date(int(b[0]), int(b[1]), int(b[2]))
 		end = datetime.date(int(e[0]), int(e[1]), int(e[2]))
-		delta = datetime.timedelta(days=10)
+		delta = datetime.timedelta(days=l[3])
 		while begin <= end:
 			s = begin.strftime("%Y-%m-%d 00:00:00")
 			begin += delta
 			e = begin.strftime("%Y-%m-%d 00:00:00")
-			wechat.crawl(l[0], s, e, l[3])
+			wechat.crawl(l[0], s, e, l[4])
 			time.sleep(1)
