@@ -19,9 +19,9 @@ def make_dir(folder_dir):
 
 
 def match(x):
-	# -1：普通用户   0：黄V    1：达人    2：蓝V
+	# -1：普通用户   0：黄V    1：蓝V
 	x = int(x)
-	verified = 2
+	verified = 1
 	if x == -1:
 		verified = -1
 	if x == 0:
