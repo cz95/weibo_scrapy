@@ -12,7 +12,7 @@ import logging
 SQLITE3_DB = 'db/blog.db'
 cnx = sqlite3.connect(database=SQLITE3_DB)
 cur = cnx.cursor()
-logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',level=logging.INFO)
+logging.basicConfig(format='%(levelname)s: %(message)s',level=logging.INFO)
 
 
 class Wechat(object):
