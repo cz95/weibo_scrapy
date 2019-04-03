@@ -10,9 +10,9 @@ import datetime
 import logging
 
 SQLITE3_DB = 'db/blog.db'
-
 cnx = sqlite3.connect(database=SQLITE3_DB)
 cur = cnx.cursor()
+logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s',level=logging.INFO)
 
 
 class Wechat(object):
@@ -37,7 +37,7 @@ class Wechat(object):
 		content = json.loads(req.text)
 		code = content['code']
 		msg = "当前账号：{}   当前时间：{}   状态：{}".format(id, start, code)
-		logging.info(msg)
+		logging.getLogger().info(msg)
 		if code == 0:
 			data_list = content['data']
 			for data in data_list:
@@ -61,7 +61,7 @@ class Wechat(object):
 				ret = self.selet_wechat_id(url=url)
 				if ret[0] == 1:
 					msg = "爬取内容重复   账号：{}   时间：{}".format(id, start)
-					logging.info(msg)
+					logging.getLogger().info(msg)
 				else:
 					self.insert_wechat(name, account, type, author, order_num,
 					                   image_url, source_url, music_url,
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 		e = l[2].split('-')
 		begin = datetime.date(int(b[0]), int(b[1]), int(b[2]))
 		end = datetime.date(int(e[0]), int(e[1]), int(e[2]))
-		delta = datetime.timedelta(days=l[3])
+		delta = datetime.timedelta(days=int(l[3]))
 		while begin <= end:
 			s = begin.strftime("%Y-%m-%d 00:00:00")
 			begin += delta
