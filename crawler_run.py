@@ -25,7 +25,10 @@ import scrapy.core.scheduler
 import scrapy.core.engine
 import scrapy.core.scraper
 import scrapy.core.spidermw
-import scrapy.core.downloader
+import scrapy.core.downloader.handlers.datauri
+import scrapy.core.downloader.handlers.file
+import scrapy.core.downloader.handlers.s3
+import scrapy.core.downloader.handlers.ftp
 
 import scrapy.downloadermiddlewares.stats
 import scrapy.downloadermiddlewares.httpcache
@@ -55,6 +58,15 @@ import scrapy.core.downloader.handlers.http
 import scrapy.core.downloader.contextfactory
 
 import scrapy.pipelines.images  # 用到图片管道
+
+from weibo_scrapy import settings
+import warnings
+from scrapy.exceptions import ScrapyDeprecationWarning
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", ScrapyDeprecationWarning)
+    from scrapy import conf
+    conf.settings = settings
 
 from scrapy.crawler import CrawlerRunner
 from twisted.internet import reactor
