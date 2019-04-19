@@ -57,7 +57,7 @@ def weibo_ana(search_type, search_key):
 	cursor.close()
 	db.close()
 	get_key = {}
-	for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=20):
+	for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=50):
 		get_key[x] = w
 	result = {}
 	# 微博数  直接显示
@@ -105,7 +105,7 @@ def repost_ana(search_key):
 	cursor.close()
 	db.close()
 	get_key = {}
-	for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=20):
+	for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=50):
 		get_key[x] = w
 	result = {}
 	# 转发数，直接显示
@@ -149,7 +149,7 @@ def comment_ana(search_key):
 	cursor.close()
 	db.close()
 	get_key = {}
-	for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=40):
+	for x, w in jieba.analyse.extract_tags(key_text, withWeight=True, topK=50):
 		get_key[x] = w
 	result = {}
 	# 评论数  （直接显示即可，弄的大一点）
