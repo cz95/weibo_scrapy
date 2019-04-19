@@ -80,7 +80,7 @@ ITEM_PIPELINES = {
     'weibo_scrapy.mysqlpipelines.pipelines.WeiboImagePipeline': 30,
 }
 
-IMAGES_STORE = '../微博/image/'
+IMAGES_STORE = "/Users/chenze/Desktop/"
 
 IMAGES_EXPIRES = 30
 
