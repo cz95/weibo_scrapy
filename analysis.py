@@ -12,10 +12,10 @@ jieba.setLogLevel(logging.ERROR)
 jieba.analyse.set_stop_words('./lib/stop_words')
 
 
-def parse_time_weibo(time_str):
+def parse_time(time_str):
 	total = time_str.split(" ")
 	tail = total[1].split(":")
-	return total[0] + " " + tail[0] + ":" + tail[1]
+	return total[0] + " " + tail[0]
 
 
 def match(x):
@@ -50,7 +50,7 @@ def weibo_ana(search_type, search_key):
 		followers += int(data[1])
 		key_text += data[2]
 		key_text += data[3]
-		time_c = parse_time_weibo(data[4])
+		time_c = parse_time(data[4])
 		if time_c not in time_line.keys():
 			time_line[time_c] = 0
 		time_line[time_c] += 1
@@ -98,7 +98,7 @@ def repost_ana(search_key):
 		if data[2] not in gender.keys():
 			gender[data[2]] = 0
 		gender[data[2]] += 1
-		time_c = data[4]
+		time_c = parse_time(data[4])
 		if time_c not in time_line.keys():
 			time_line[time_c] = 0
 		time_line[time_c] += 1
@@ -142,7 +142,7 @@ def comment_ana(search_key):
 		verify_type[v_type] += 1
 		like_counts += int(data[1])
 		key_text += data[0]
-		time_c = data[3]
+		time_c = parse_time(data[3])
 		if time_c not in time_line.keys():
 			time_line[time_c] = 0
 		time_line[time_c] += 1
