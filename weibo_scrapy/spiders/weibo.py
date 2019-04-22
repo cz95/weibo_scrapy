@@ -37,7 +37,6 @@ class WeiboSpider(scrapy.Spider):
             elif spider_type == 2:  # 2 基于关键词爬取
                 search_type = line.split(',')[2]
                 "https://m.weibo.cn/api/container/getIndex?containerid=100103type=61&q=广发银行信用卡&t=0&page_type=searchall&page=9"
-                ""
                 url_orgin = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D" + \
                             line.split(',')[
                                 2] + "%26q%3D" + search_key + "%26t%3D0&page_type=searchall"
@@ -74,20 +73,28 @@ class WeiboSpider(scrapy.Spider):
                     f.write(response.text)
             if response.meta['search_type'] == -1:
                 weibos = data['data']['cards']
+                for weibo in weibos:
+                    if 'mblog' in weibo:
+                        mblog = weibo['mblog']
+                        url = "https://m.weibo.cn/statuses/show?id=" + mblog['bid']
+                        yield Request(url, callback=self.parse_detail, dont_filter=True,
+                                      meta={'search_type': response.meta['search_type'],
+                                            'search_key': response.meta['search_key'],
+                                            'download_pic': response.meta[
+                                                'download_pic']})
             else:
                 cards = data['data']['cards']
-                weibos = cards[0]['card_group']
-            for weibo in weibos:
-                card_type = weibo['card_type']
-                if card_type != 9:  # 微博的card_type == 9
-                    continue
-                mblog = weibo['mblog']
-                url = "https://m.weibo.cn/statuses/show?id=" + mblog['bid']
-                yield Request(url, callback=self.parse_detail, dont_filter=True,
-                              meta={'search_type': response.meta['search_type'],
-                                    'search_key': response.meta['search_key'],
-                                    'download_pic': response.meta[
-                                        'download_pic']})
+                for card in cards:
+                    if 'card_group' in card:
+                        for weibo in card['card_group']:
+                            if 'mblog' in weibo:
+                                mblog = weibo['mblog']
+                                url = "https://m.weibo.cn/statuses/show?id=" + mblog['bid']
+                                yield Request(url, callback=self.parse_detail, dont_filter=True,
+                                              meta={'search_type': response.meta['search_type'],
+                                                    'search_key': response.meta['search_key'],
+                                                    'download_pic': response.meta[
+                                                        'download_pic']})
 
     def parse_detail(self, response):
         content = json.loads(response.text)
