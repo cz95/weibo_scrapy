@@ -42,12 +42,16 @@ def weibo_ana(search_type, search_key):
 	datas = cursor.fetchall()
 	weibo_num = len(datas)
 	time_line = {}
+	i = 0
 	for data in datas:
 		v_type = match(data[0])
 		if v_type not in verify_type.keys():
 			verify_type[v_type] = 0
 		verify_type[v_type] += 1
-		followers += int(data[1])
+		if search_type == -1:
+			followers = int(data[1])
+		else:
+			followers += int(data[1])
 		key_text += data[2]
 		key_text += data[3]
 		time_c = parse_time(data[4])
