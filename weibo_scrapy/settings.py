@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 # Scrapy settings for weibo_scrapy project
 #
@@ -80,7 +81,7 @@ ITEM_PIPELINES = {
     'weibo_scrapy.mysqlpipelines.pipelines.WeiboImagePipeline': 30,
 }
 
-IMAGES_STORE = "/Users/chenze/Desktop/"
+IMAGES_STORE = os.path.join(os.environ['USERPROFILE'], 'Pictures/weibo')
 
 IMAGES_EXPIRES = 30
 
