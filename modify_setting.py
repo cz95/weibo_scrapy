@@ -9,7 +9,7 @@ def modify_pic_dir(pic_dir):
     with open(setting_dir, 'r+', encoding='utf-8') as f:
         for line in f.readlines():
             if (line.find('IMAGES_STORE') != -1):
-                line = 'IMAGES_STORE = "%s"' % (pic_dir,) + '\n'
+                line = 'IMAGES_STORE = r"%s"' % (pic_dir,) + '\n'
             data += line
     return data
 
