@@ -35,6 +35,6 @@ if __name__ == '__main__':
         data = modify_proxy(sys.argv[2], sys.argv[3])
     elif sys.argv[1] == "pic_dir":
         data = modify_pic_dir(sys.argv[2])
-    with open(setting_dir, 'r+', encoding='utf-8') as f:
+    with open(setting_dir, 'w', encoding='utf-8') as f:
         f.writelines(data)
 
