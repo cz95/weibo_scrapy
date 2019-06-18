@@ -15,7 +15,7 @@ def make_dir(folder_dir):
 	folder = os.path.exists(folder_dir)
 	if not folder:
 		os.makedirs(folder_dir)
-		print("创建文件夹" + folder_dir)
+		print("Create folder:" + folder_dir)
 
 
 def match(x):
