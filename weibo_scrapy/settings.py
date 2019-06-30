@@ -80,7 +80,6 @@ ITEM_PIPELINES = {
     'weibo_scrapy.mysqlpipelines.pipelines.WeiboImagePipeline': 30,
 }
 
-IMAGES_STORE = r"..\weibo\pictures\"
 
 IMAGES_EXPIRES = 30
 
@@ -117,8 +116,8 @@ SQLITE3_DB = 'db/blog.db'
 PROXY = {
     "proxyHost": "http-dyn.abuyun.com",
     "proxyPort": "9020",
-    "proxyUser": "H32G2872CU64512D",
-    "proxyPass": "136406B2BD161CB9",
+    "proxyUser": "",
+    "proxyPass": "",
 }
 
 USER_AGENTS = [
@@ -140,7 +139,7 @@ USER_AGENTS = [
     "Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; fr) Presto/2.9.168 Version/11.52",
 ]
 
-WECHAT_NEWRANK = "f36092e5fc9940d78e039514b"
+WECHAT_NEWRANK = ""
 
 INT_TO_TYPE = {-1: "用户抓取", 1: "综合抓取", 60: "热门抓取", 61: "实时抓取"}
 TYPE_TO_INT = {"用户抓取": -1, "综合抓取": 1, "热门抓取": 60, "实时抓取": 61,
