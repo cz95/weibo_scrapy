@@ -27,7 +27,7 @@ Scrapy==1.6.0
 service-identity==18.1.0
 six==1.12.0
 soupsieve==1.9
-Twisted==19.7.0
+Twisted==22.1.0
 urllib3==1.24.2
 w3lib==1.20.0
 XlsxWriter==1.1.6
